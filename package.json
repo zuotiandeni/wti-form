@@ -1,0 +1,25 @@
+{
+  "name": "wti-form",
+  "version": "1.0.0",
+  "description": "低代码表单组件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qq20004604/wti-form.git"
+  },
+  "keywords": [
+    "wti-form",
+    "low-code",
+    "form",
+    "element-ui"
+  ],
+  "author": "王冬",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/qq20004604/wti-form/issues"
+  },
+  "homepage": "https://github.com/qq20004604/wti-form#readme"
+}
