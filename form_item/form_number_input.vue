@@ -1,8 +1,8 @@
 <template>
     <!-- 数字输入框 -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key} input-number-wrapper${getTextModel?'':' form-item-box-input'}`"
-         class="form-item-box">
+         :class="`form-unqiue-${item.key} ${getTextModel?'':' form-item-box-input'}`"
+         class="form-item-box input-number-wrapper">
         <template v-if="!getTextModel">
             <el-input v-model.trim="val"
                       :placeholder="getPlaceholder(item)"
@@ -19,6 +19,8 @@
                 <span>{{ symbolBefore }}</span>
                 <span>{{ dealInputValue }}</span>
                 <span>{{ symbolAfter }}</span>
+                <span class="place-holder"
+                      v-if="!dealInputValue && !symbolBefore && !symbolAfter">{{ getPlaceholder(item) }}</span>
             </div>
         </template>
         <div v-else :style="item.textStyle||{}">
@@ -39,7 +41,7 @@
             return {
                 // 千分位的值
                 // dealInputValue: '',
-                isShowInput: true,
+                isShowInput: false,
                 // symbolBefore: '',
                 // symbolAfter: ''
             };
@@ -154,12 +156,8 @@
             },
             onBlur () {
                 this.isShowInput = false;
+                // 如果为空，则返回空
                 if (this.val === '') {
-                    if (!this.item.returnString) {
-                        this.val = 0;
-                    } else {
-                        this.val = '0';
-                    }
                     return;
                 }
                 let newVal = this.val;
@@ -240,6 +238,14 @@
 
 .show {
     opacity: 1;
+
+    .place-holder {
+        float: left;
+        color: #c0c4cc;
+        vertical-align: top;
+        height: 34px;
+        line-height: 34px;
+    }
 }
 
 .hidden {
@@ -271,7 +277,7 @@
 
 .div-input-box {
     height: 36px;
-    line-height: 36px;
+    line-height: 34px;
     color: #606266;
     font-size: inherit;
     font: 400 14px Arial;
@@ -296,9 +302,12 @@
 }
 
 .form-item-box {
+    height: 40px;
+    line-height: 40px;
+
     .el-input__inner {
         height: 36px;
-        line-height: 36px;
+        line-height: 34px;
         padding-right: 50px;
         padding-left: 12px;
         border-radius: 4px;

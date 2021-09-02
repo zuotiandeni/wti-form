@@ -90,51 +90,63 @@
                                                       :label="getFormItemLabel(rowItem)"
                                                       :prop="rowItem.key">
                                             <FormInput v-if="rowItem.type==='input'"
+                                                       :ref="rowItem.key"
                                                        :item="rowItem"
                                                        :all-disabled="allDisabled"
                                                        v-model.trim="formData[rowItem.key]"/>
                                             <FormDate v-if="rowItem.type==='date-input'"
+                                                      :ref="rowItem.key"
                                                       :item="rowItem"
                                                       :all-disabled="allDisabled"
                                                       v-model.trim="formData[rowItem.key]"/>
                                             <FormHourMinute v-if="rowItem.type==='hour-minute-input'"
+                                                            :ref="rowItem.key"
                                                             :item="rowItem"
                                                             :all-disabled="allDisabled"
                                                             v-model.trim="formData[rowItem.key]"/>
                                             <FormDateRange v-if="rowItem.type==='date-range-input'"
+                                                           :ref="rowItem.key"
                                                            :item="rowItem"
                                                            :all-disabled="allDisabled"
                                                            v-model.trim="formData[rowItem.key]"/>
                                             <FormDictSelect v-if="rowItem.type === 'dynamic-select'"
+                                                            :ref="rowItem.key"
                                                             :item="rowItem"
                                                             :all-disabled="allDisabled"
                                                             v-model.trim="formData[rowItem.key]"/>
                                             <FormNormalSelect v-if="rowItem.type === 'normal-select'"
+                                                              :ref="rowItem.key"
                                                               :item="rowItem"
                                                               :all-disabled="allDisabled"
                                                               v-model.trim="formData[rowItem.key]"/>
                                             <FormNumberInput v-if="rowItem.type === 'number-input'"
+                                                             :ref="rowItem.key"
                                                              :item="rowItem"
                                                              :all-disabled="allDisabled"
                                                              v-model.trim="formData[rowItem.key]"/>
                                             <!-- 动态下拉框，入参是父 key，根据父 key 自动加载列表内容 -->
                                             <FormAutoComplete v-if="rowItem.type === 'auto-complete-input'"
+                                                              :ref="rowItem.key"
                                                               :item="rowItem"
                                                               :all-disabled="allDisabled"
                                                               v-model.trim="formData[rowItem.key]"/>
                                             <FormRadio v-if="rowItem.type === 'radio'"
+                                                       :ref="rowItem.key"
                                                        :item="rowItem"
                                                        :all-disabled="allDisabled"
                                                        v-model.trim="formData[rowItem.key]"/>
                                             <FormTextarea v-if="rowItem.type==='textarea'"
+                                                          :ref="rowItem.key"
                                                           :item="rowItem"
                                                           :all-disabled="allDisabled"
                                                           v-model.trim="formData[rowItem.key]"/>
                                             <FormMoneyInput v-if="rowItem.type==='money-input'"
+                                                            :ref="rowItem.key"
                                                             :item="rowItem"
                                                             :all-disabled="allDisabled"
                                                             v-model.trim="formData[rowItem.key]"/>
                                             <FormRateInput v-if="rowItem.type==='rate-input'"
+                                                           :ref="rowItem.key"
                                                            :item="rowItem"
                                                            :all-disabled="allDisabled"
                                                            v-model.trim="formData[rowItem.key]"/>
@@ -237,6 +249,8 @@
 
                 scanType: 'normal', // normal 默认（大表单），single（表单只显示单个区块，上方显示所有区块的按钮组）
                 singleScanBlock: '', // 单个模式时，显示哪个表单
+
+                version: '1.0.0'
             };
         },
         created () {
@@ -883,6 +897,14 @@
 <style lang="less" type="text/less" scoped>
 
 .wti-form {
+    width: 100%;
+
+    .el-input__inner {
+        height: 36px !important;
+        line-height: 36px !important;
+        border: 1px solid #E2E3E6 !important;
+    }
+
     .block-title {
         position: relative;
         height: 50px;
@@ -918,6 +940,7 @@
             line-height: 16px;
             font-size: 14px;
             cursor: pointer;
+            user-select: none;
         }
     }
 
@@ -935,7 +958,6 @@
         .block-title {
             height: 60px;
             line-height: 60px;
-            /*border-bottom: 1px solid #DDE0EA;*/
             background: #f8f9fb;
             padding: 20px 0 18px 24px;
             border-top-left-radius: 8px;
@@ -957,405 +979,88 @@
 }
 
 
-.el-input__prefix {
-    position: relative;
-
-    .el-input__icon {
-        position: absolute;
-        right: 12px;
-    }
-}
-
 .el-divider {
     background-color: #F4F5F8;
 }
 
-.cash-border /deep/ .el-input-group__append {
-    border: none;
-}
+.scan-type {
+    position: relative;
+    height: 36px;
+    line-height: 36px;
+    margin-bottom: 16px;
 
-// 自定义布局的 form-item
-.form-item-custom-layout-left /deep/ .el-form-item__content {
-    display: flex;
-    line-height: 20px;
-
-    .long-input {
-        margin-left: 24px;
-
-    }
-
-    // .form-item-custom-layout-left-label:before {
-    //     content: '*';
-    //     color: #F56C6C;
-    //     margin-right: 4px;
-    //     position: absolute;
-    //     left: -10px;
-    // }
-    .form-item-custom-layout-left-label {
-        color: #3A4566;
-
-        // &:before {
-        //     content: '*';
-        //     color: #F56C6C;
-        //     margin-right: 4px;
-        // }
-    }
-
-    .require {
-        padding-left: 10px;
-
-        &:before {
-            content: '*';
-            color: #F56C6C;
-            margin-right: 4px;
-            position: absolute;
-            left: 0;
-        }
-    }
-}
-
-.wti-form {
-    .other /deep/ .el-checkbox:last-of-type {
-        margin-top: 24px;
-    }
-
-    .percentage-style {
-        // height: 36px;
-        min-height: 36px;
-    }
-
-    .el-input__inner {
-        height: 36px !important;
-        line-height: 36px !important;
-        border: 1px solid #E2E3E6 !important;
-    }
-
-    .el-form--label-top .el-form-item__label {
-        padding-bottom: 8px;
-    }
-
-    .extra-unit-prepend {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 70px;
-        height: 34px;
-        line-height: 34px;
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #12182A;
-        text-align: center;
-    }
-
-    .extra-unit {
-        position: absolute;
-        top: 1px;
-        right: 7px;
-        min-width: 39px;
-        padding-right: 9px;
-        height: 31px;
-        line-height: 36px;
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #12182A;
-        text-align: center;
-    }
-
-    .input-center {
-        input {
-            text-align: center;
-        }
-    }
-
-    .textautosizeStyle {
-        padding: 8px 12px 28px;
-        background: #f5f7fa;
-        border: 1px solid #F4F5F8;
-        border-radius: 4px;
-        min-height: 18px;
-
-        span {
-            font-family: PingFangSC-Regular;
-            font-size: 14px;
-            color: #B0B3B9;
-            letter-spacing: 0;
-            line-height: 18px;
-        }
-    }
-
-    .el-input--suffix .el-input__inner {
-        padding-left: 12px;
-    }
-
-    .percentage-style {
-        position: relative;
-        background-color: white;
-        width: 100%;
-
-        .el-input {
-            position: relative;
-            width: 100%;
-            height: 36px;
-
-            .el-input__inner {
-                position: absolute;
-                width: 100%;
-                height: 36px;
-                line-height: 36px;
-                padding-right: 10px;
-                padding-left: 12px;
-            }
-        }
-    }
-
-    .percentage-style-none-padding-right {
-        .el-input .el-input__inner {
-            padding-right: 60px !important;
-        }
-    }
-
-    .form-border-none /deep/ .el-input-group__append {
-        border: none
-    }
-
-    .el-form-item__label {
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #3A4566;
-        line-height: 18px;
-    }
-
-    .el-col {
-        padding-left: 80px
-    }
-
-    width: 100%;
-
-    .split-line {
-        margin-bottom: 16px !important;
-        margin-top: 8px !important;
-    }
-
-    .cash-item /deep/ .el-input__inner {
-        font-size: 14px;
-        border: none;
-        outline: none;
-        background: #F4F7FA;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        height: 34px;
-    }
-
-    .cash-item .el-input {
+    .all-fold-btn {
+        display: inline-block;
+        padding: 0 20px;
         height: 36px;
-    }
-
-    .min-input /deep/ .el-input {
-        width: 80px;
-    }
-
-    .min-input span {
-        padding: 0px 20px;
-    }
-
-    .checkbox /deep/ .el-input {
-        width: 240px;
-    }
-
-    .other /deep/ .el-input {
-        width: 540px;
-    }
-
-    .checkbox .el-checkbox__input.is-checked + .el-checkbox__label {
-        color: #606266;
-    }
-
-    .el-checkbox {
-        .el-checkbox__label {
-            font-family: PingFangSC-Regular;
-            font-size: 14px;
-            color: #21273A;
-        }
-    }
-
-    .checkbox .el-checkbox__input.is-checked .el-checkbox__inner,
-    .el-checkbox__input.is-indeterminate .el-checkbox__inner,
-    .el-checkbox-group .is-checked .el-checkbox__inner {
-        background-color: #E35454;
-        border-color: #E35454;
+        background: #EE473A;
+        border: 1px solid #EE473A;
         border-radius: 4px;
-    }
+        color: #fff;
+        cursor: pointer;
+        text-align: center;
+        font-size: 14px;
+        vertical-align: top;
 
-    .checkboxs /deep/ .el-input-group__append {
-        background-color: white;
-    }
-
-    .checkbox {
-
-        .rest {
-            position: relative;
-            display: inline-block;
-        }
-
-        .textbox {
-            position: absolute;
-            width: 500px;
-            padding: 5px 0px 0px 45px;
-        }
-    }
-}
-
-</style>
-<style lang="less" type="text/less">
-
-.wti-form-v2 {
-    //多选框样式修改
-    .el-radio__input.is-checked + .el-radio__label {
-        color: #EE473A !important;
-    }
-
-    .el-radio__input.is-checked .el-radio__inner {
-        border-color: #EE473A !important;
-        background: #fff !important;
-    }
-
-    .el-radio__inner::after {
-        width: 8px !important;
-        height: 8px !important;
-        background-color: #EE473A !important;
-    }
-
-    .el-radio__inner {
-        width: 16px;
-        height: 16px;
-    }
-
-    .scan-type {
-        position: relative;
-        height: 36px;
-        line-height: 36px;
-        margin-bottom: 16px;
-
-        .all-fold-btn {
-            display: inline-block;
-            padding: 0 20px;
-            height: 36px;
-            background: #EE473A;
-            border: 1px solid #EE473A;
-            border-radius: 4px;
-            color: #fff;
-            cursor: pointer;
-            text-align: center;
-            font-size: 14px;
+        .all-fold-icon {
+            width: 14px;
+            height: 14px;
             vertical-align: top;
-
-            .all-fold-icon {
-                width: 14px;
-                height: 14px;
-                vertical-align: top;
-                margin-top: 11px;
-            }
+            margin-top: 11px;
         }
+    }
 
-        .block-btn-list {
-            float: left;
+    .block-btn-list {
+        float: left;
 
-            .block-btn {
-                border: 1px solid #DDE0EA;
-                height: 36px;
-                line-height: 36px;
-                padding: 0 18px;
-                color: #3A4566;
-                display: inline-block;
-                cursor: pointer;
-                user-select: none;
-            }
-
-            .block-btn.focus {
-                background: #EE473A;
-                color: #fff;
-            }
-
-            .block-btn:first-child {
-                border-radius: 4px 0 0 4px;
-
-            }
-
-            .block-btn:last-child {
-                border-radius: 0 4px 4px 0;
-
-            }
-        }
-
-        .scan-type-btn {
-            display: inline-block;
-            float: right;
-            padding: 0 20px;
+        .block-btn {
+            border: 1px solid #DDE0EA;
             height: 36px;
-            border: 1px solid #AEB3BF;
-            border-radius: 4px;
-            color: #12182A;
+            line-height: 36px;
+            padding: 0 18px;
+            color: #3A4566;
+            display: inline-block;
             cursor: pointer;
-            text-align: center;
-            font-size: 14px;
-            vertical-align: top;
             user-select: none;
+        }
 
-            .scan-type-icon {
-                width: 14px;
-                height: 14px;
-                vertical-align: top;
-                margin-top: 11px;
-            }
+        .block-btn.focus {
+            background: #EE473A;
+            color: #fff;
+        }
+
+        .block-btn:first-child {
+            border-radius: 4px 0 0 4px;
+
+        }
+
+        .block-btn:last-child {
+            border-radius: 0 4px 4px 0;
+
         }
     }
 
+    .scan-type-btn {
+        display: inline-block;
+        float: right;
+        padding: 0 20px;
+        height: 36px;
+        border: 1px solid #AEB3BF;
+        border-radius: 4px;
+        color: #12182A;
+        cursor: pointer;
+        text-align: center;
+        font-size: 14px;
+        vertical-align: top;
+        user-select: none;
 
-    .form-item-box {
-        min-height: 40px;
-        /*max-height: 40px;*/
-        line-height: 40px;
-    }
-
-    // 单个表单要素的高度，强制在外部设置，以规范每个要素的高度，避免因为高度不同导致的样式错乱
-    //.el-col {
-    //    height: 100px;
-    //}
-
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-    }
-
-    input[type="number"] {
-        -moz-appearance: textfield;
-    }
-
-    .clear-icon-setting {
-        .el-input__suffix {
-            right: 40px !important;
-            top: -1px !important;
+        .scan-type-icon {
+            width: 14px;
+            height: 14px;
+            vertical-align: top;
+            margin-top: 11px;
         }
-
-        .el-input--suffix {
-            .el-input__inner {
-                padding-right: 64px !important;
-            }
-        }
-    }
-
-    .el-divider {
-        background-color: #E7E8EB;
-    }
-
-    .el-divider--horizontal {
-        margin: 6px 0 30px;
     }
 }
 
-
-.el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:focus, .el-message-box__input input.invalid, .el-message-box__input input.invalid:focus {
-    border-color: #EE473A !important;
-}
 </style>

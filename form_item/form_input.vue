@@ -10,9 +10,15 @@
                   @focus="e => onFocus(item, e)"
                   type="text"
                   :clearable="true"
-                  v-if="!getTextModel"/>
-        <div v-else :style="item.textStyle||{}">{{ val || '-' }}</div>
-        <span class="extra-unit">{{ appendMsg }}</span>
+                  v-if="!getTextModel">
+            <template slot="prepend" v-if="prependMsg">{{ prependMsg }}</template>
+            <template slot="append" v-if="appendMsg">{{ appendMsg }}</template>
+        </el-input>
+        <div v-else :style="item.textStyle||{}" class="form-input-text">
+            <span class="prepend-msg" v-if="prependMsg">{{ prependMsg }}</span>
+            <span class="text">{{ val || '-' }}</span>
+            <span class="append-msg" v-if="appendMsg">{{ appendMsg }}</span>
+        </div>
     </div>
 </template>
 
@@ -51,31 +57,19 @@
     position: relative;
     width: 100%;
     height: 36px;
+
     .el-input__inner {
-        position: absolute;
-        width: 100%;
         height: 36px;
         line-height: 36px;
-        padding-right: 50px;
-        padding-left: 12px;
     }
 }
 
-.form-input-box /deep/ .el-input-group__prepend, .single-input .form-input-box /deep/ .el-input-group__append {
-    padding: 0 10px;
-}
-
-.extra-unit {
-    position: absolute;
-    top: 1px;
-    right: 7px;
-    min-width: 39px;
-    padding-right: 9px;
-    height: 31px;
+.form-input-text {
+    position: relative;
+    width: 100%;
+    height: 36px;
     line-height: 36px;
-    font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #12182A;
-    text-align: center;
 }
 </style>

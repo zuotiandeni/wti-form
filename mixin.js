@@ -61,7 +61,6 @@ export default {
             return formItem.label;
         },
 
-
         // 获取单个要素的列宽
         getColSize (item) {
             if (item.type === 'child-form') {
