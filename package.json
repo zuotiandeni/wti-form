@@ -1,6 +1,6 @@
 {
   "name": "wti-form",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "低代码表单组件",
   "main": "index.js",
   "scripts": {
@@ -21,5 +21,17 @@
   "bugs": {
     "url": "https://github.com/qq20004604/wti-form/issues"
   },
-  "homepage": "https://github.com/qq20004604/wti-form#readme"
+  "homepage": "https://github.com/qq20004604/wti-form#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "axios": "^0.21.1",
+    "babel-loader": "^8.2.2",
+    "element-ui": "^2.15.0",
+    "less": "^4.1.1",
+    "less-loader": "^7.3.0",
+    "vue": "^2.6.12"
+  }
 }
