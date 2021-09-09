@@ -11,7 +11,7 @@ export default {
             type: Object,
             default: () => ({}),
         },
-        value: [ String, Number ],
+        value: [ String, Number, Array ],
         allDisabled: {
             type: Boolean,
             default: false,
@@ -23,12 +23,30 @@ export default {
     },
     inject: [
         'dynamicDict',
+        'dynamicSelectOption',
         'changeData',
         'statusChangeFn',
         'formItemType',
         'childChangeData',
     ],
     computed: {
+        // 扩展属性，直接将属性配置，传到表单组件内部（即 Element UI 上）
+        // 忽略属性【key、size】
+        bindOptions () {
+            const obj = Object.assign({}, this.item);
+            delete obj.key;
+            delete obj.size;
+            delete obj.type;
+            delete obj.label;
+            delete obj.readonly;
+            delete obj.rules;
+            delete obj.placeholder;
+            delete obj.prepend;
+            delete obj.append;
+            delete obj.defaultValue;
+
+            return obj;
+        },
         // 获取禁用状态
         getDisabled () {
             // 如果全部都被禁用了
@@ -58,6 +76,7 @@ export default {
                 return this.value;
             },
             set (v) {
+                // console.log(`|${v}|`);
                 this.$emit('input', v);
                 // 只有非子表单的情况下，才会冒泡上去数据变更
                 if (this.formItemType !== 'childForm') {
@@ -82,7 +101,7 @@ export default {
         },
     },
     methods: {
-        // 获取输入框
+        // 获取输入框的 placeholder
         getPlaceholder (formItem) {
             // todo 这里可能还要加一个全部 disable 的判断
             // 如果已禁用，那么不显示 placeholder
@@ -97,10 +116,23 @@ export default {
             return `请输入${formItem.label}`;
         },
 
+        // 获取下拉框 placeholder
+        getSelectPlaceholder (formItem) {
+            // 如果已禁用，那么不显示 placeholder
+            if (formItem.disable) {
+                return '';
+            }
+            // 如果有 placeholder，则直接返回
+            if (formItem.placeholder !== undefined && formItem.placeholder !== null) {
+                return formItem.placeholder;
+            }
+            // 否则返回默认的
+            return `请选择${formItem.label}`;
+        },
+
         // 当取消焦点
         onFocus (item, e) {
             // 表单要素有 onFocus 事件，那么则触发
-            // todo 这里缺少传送一个全部表单数据的值
             if (item.onFocus) {
                 item.onFocus(e, this.formData);
             }
@@ -109,7 +141,6 @@ export default {
         // 当取消焦点
         onBlur (item, e) {
             // 表单要素有 onBlur 事件，那么则触发
-            // todo 这里缺少传送一个全部表单数据的值
             if (item.onBlur) {
                 item.onBlur(e, this.formData);
             }
@@ -230,6 +261,56 @@ export default {
                         });
                     }
                 });
+            }
+        },
+
+
+        // 丢掉数字的小数点右边末尾的 0
+        // 例如入参是 1.2000，出参是 1.2
+        // 入参是 12.0000 ，出参是 12
+        throwPointRightZero (v) {
+            const n = String(v);
+            if (n.indexOf('.') > -1) {
+                // 有小数点
+                const list = n.split('.');
+                let pointRight = list[1];
+                pointRight = pointRight.replace(/[0]+$/g, '');
+                if (pointRight.length === 0) {
+                    return list[0];
+                } else {
+                    return list[0] + '.' + pointRight;
+                }
+            } else {
+                // 无小数点
+                return n;
+            }
+        },
+
+        // 丢掉数字的小数点左边开头的 0
+        // 例如入参是 0123.45，出参是 123.45
+        // 入参是 00.12 ，出参是 0.12
+        throwPointLeftZero (v) {
+            let n = String(v);
+            if (n.indexOf('.') > -1) {
+                // 有小数点
+                const list = n.split('.');
+                let pointLeft = list[0];
+                pointLeft = pointLeft.replace(/^[0]+/g, '');
+                if (pointLeft.length === 0) {
+                    return '0.' + list[1];
+                } else {
+                    return pointLeft + '.' + list[1];
+                }
+            } else {
+                // 无小数点，那么直接把左边开头的 0 扔掉
+                n = n.replace(/^[0]+/g, '');
+                // 如果结果为空，并且 v 不是空（比如是 0），那么返回 0
+                // 如果都是空，则返回空（这里不做处理）
+                if (n === '' && v !== '') {
+                    n = '0';
+                }
+                // 无小数点
+                return n;
             }
         },
     },

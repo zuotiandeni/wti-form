@@ -1,9 +1,5 @@
 ## 更新历史
 
-### 1.0.0
-
-初版发布，已可用。
-
 <a href="https://github.com/qq20004604/wti-form">源码地址</a>
 
 <p>
@@ -17,3 +13,14 @@
 
 
 ![Github stars](https://img.shields.io/github/stars/qq20004604/wti-form.svg?label=Stars&color=success)
+
+
+### 更新历史
+
+* 1.0.1
+
+优化功能，添加 多级联动下拉框、标准数字输入框；更新文档
+
+* 1.0.0
+
+初版发布，已可用。

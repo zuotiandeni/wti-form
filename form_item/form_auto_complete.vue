@@ -13,6 +13,7 @@
                          value-key="value"
                          :fetch-suggestions="querySearchAsync"
                          @select="handleSelect"
+                         v-bind="bindOptions"
                          v-if="!getTextModel"/>
         <div v-else :style="item.textStyle||{}">{{ val || '-' }}</div>
     </div>
@@ -37,7 +38,6 @@
                 }
 
                 axios.post(this.item.searchUrl, payload).then(res => {
-                    // console.log(res);
                     if (res.code === 200) {
                         if (res.data) {
                             const d = res.data.map(item => {
@@ -54,18 +54,29 @@
                                 }
                             });
                             cb(d);
+                            if (this.item.fetchSuggestions) {
+                                this.item.fetchSuggestions(d, this.randomId);
+                            }
                         } else {
                             cb([]);
-                            this.$message.error('暂无数据');
+                            if (this.item.fetchSuggestions) {
+                                this.item.fetchSuggestions([], this.randomId);
+                            }
+                            this.$message.error('无匹配数据');
                         }
                     } else {
                         cb([]);
-                        this.$message.error(res.msg);
+                        if (this.item.fetchSuggestions) {
+                            this.item.fetchSuggestions([], this.randomId);
+                        }
+                        this.$message.error(res.msg || '无匹配数据');
                     }
+                }).catch(() => {
+                    this.$message.error('服务器错误');
                 });
             },
             handleSelect (selectedItem) {
-                console.log('selectedItem', selectedItem);
+                // console.log('selectedItem', selectedItem);
                 const payload = {};
                 // 将需要更新的数据的值，添加到 payload 里
                 this.item.autoCompleteKeys.forEach(key => {
@@ -73,6 +84,10 @@
                 });
                 // 再调用方法，推到 wti_form 这个组件中
                 this.statusChangeFn.updateFormData(payload);
+
+                if (this.item.onSelect) {
+                    this.item.onSelect(selectedItem, this.randomId);
+                }
             }
         }
     };

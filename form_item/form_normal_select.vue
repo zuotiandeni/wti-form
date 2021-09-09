@@ -5,7 +5,8 @@
         <el-select style="width:100%"
                    v-model="val"
                    :disabled="getDisabled"
-                   :placeholder="getPlaceholder(item)"
+                   :placeholder="getSelectPlaceholder(item)"
+                   v-bind="bindOptions"
                    v-if="!getTextModel">
             <el-option v-for="option in item.options"
                        :key="option.value"
@@ -60,30 +61,30 @@
 </script>
 
 <style scoped lang="less">
-    @import '~common/less/config.less';
+@import '~common/less/config.less';
 
-    .form-item-box /deep/ .el-input {
-        position: relative;
+.form-item-box /deep/ .el-input {
+    position: relative;
+    width: 100%;
+    height: 36px;
+
+    .el-input__inner {
+        position: absolute;
         width: 100%;
         height: 36px;
-
-        .el-input__inner {
-            position: absolute;
-            width: 100%;
-            height: 36px;
-            line-height: 36px;
-            padding-right: 10px;
-            padding-left: 12px;
-        }
-
-        .el-input__inner:focus {
-            border-color: #8D94A5;
-        }
+        line-height: 36px;
+        padding-right: 10px;
+        padding-left: 12px;
     }
 
-    .el-select-dropdown__item.selected{
-        color: #606266;
-        font-weight: normal;
+    .el-input__inner:focus {
+        border-color: #8D94A5;
     }
+}
+
+.el-select-dropdown__item.selected {
+    color: #606266;
+    font-weight: normal;
+}
 
 </style>

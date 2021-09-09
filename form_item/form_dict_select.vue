@@ -8,13 +8,12 @@
                    :disabled="getDisabled"
                    :placeholder="getPlaceholder(item)"
                    v-if="!getTextModel">
-            <!-- <el-option key="" label="请选择..." value=""/> -->
-            <el-option v-for="items in dynamicDict[item.parentKey]"
-                       :key="items[dictKey.key]"
-                       :label="items[dictKey.label]"
-                       :value="items[dictKey.key]"/>
+            <el-option v-for="option in dynamicDict[item.parentKey]"
+                       :key="option[dynamicSelectOption.value]"
+                       :label="option[dynamicSelectOption.label]"
+                       :value="option[dynamicSelectOption.value]"/>
         </el-select>
-        <div v-else :style="item.textStyle||{}">{{ textModelValue || '-' }}</div>
+        <div v-else :style="item.textStyle || {}">{{ textModelValue || '-' }}</div>
     </div>
 </template>
 
@@ -24,13 +23,12 @@
     export default {
         name: 'FormDynamicSelect',
         mixins: [ FormMixin ],
-        inject: [ 'dictKey' ],
         computed: {
             textModelValue () {
                 const content = this.dynamicDict[this.item.parentKey] && this.dynamicDict[this.item.parentKey].find((item) => {
-                    return item[this.dictKey.key] === this.val;
+                    return item[this.dynamicSelectOption.value] === this.val;
                 });
-                return content && content[this.dictKey.label] || '';
+                return content && content[this.dynamicSelectOption.label] || '';
             },
 
             val: {
@@ -56,21 +54,21 @@
 </script>
 
 <style scoped lang="less">
-@import '~common/less/config.less';
+    @import '~common/less/config.less';
 
-.form-item-box /deep/ .el-input {
-    position: relative;
-    width: 100%;
-    height: 36px;
-
-    .el-input__inner {
-        position: absolute;
+    .form-item-box /deep/ .el-input {
+        position: relative;
         width: 100%;
         height: 36px;
-        line-height: 36px;
-        padding-right: 10px;
-        padding-left: 12px;
+
+        .el-input__inner {
+            position: absolute;
+            width: 100%;
+            height: 36px;
+            line-height: 36px;
+            padding-right: 10px;
+            padding-left: 12px;
+        }
     }
-}
 
 </style>

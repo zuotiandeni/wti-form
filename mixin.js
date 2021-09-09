@@ -5,6 +5,13 @@
  * 功能说明：
  * 公共表单组件
  */
+const superType = (data) => {
+    const type = Object.prototype.toString.call(data).toLowerCase();
+    return type.replace(/^\[object\s(\w+)\]$/, (...rest) => {
+        return rest[1];
+    });
+};
+
 export default {
     props: {
         // 全部表单元素禁用。通常用于提交时使用
@@ -68,7 +75,24 @@ export default {
             }
 
             // 要素为其他类型时，优先全局 size，再次是要素本身 size，再次是默认值 12，半行
-            return this.formItemCol || item.size || 12;
+            return item.span || this.formItemCol || item.size || 12;
         },
+        deepCopy (origin) {
+            const valueTypes = [ 'object', 'array' ]; // 后面可以支持下 map、set 等
+            if (!valueTypes.includes(superType(origin))) {
+                return '必须传入对象'; // 若不是对象则结束
+            }
+            const target = Array.isArray(origin) ? [] : {}; // 判别是数组还是对象
+            for (const k in origin) { // 循环拷贝
+                if (origin.hasOwnProperty(k)) { // 判断属性是否在对象自身上（非原型链上的父级属性）
+                    if (valueTypes.includes(superType(origin[k]))) { // 复杂类型，递归
+                        target[k] = this.deepCopy(origin[k]);
+                    } else {
+                        target[k] = origin[k];
+                    }
+                }
+            }
+            return target;
+        }
     },
 };

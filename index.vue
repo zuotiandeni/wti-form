@@ -139,7 +139,7 @@
                                                           :ref="rowItem.key"
                                                           :item="rowItem"
                                                           :all-disabled="allDisabled"
-                                                          v-model.trim="formData[rowItem.key]"/>
+                                                          v-model="formData[rowItem.key]"/>
                                             <FormMoneyInput v-if="rowItem.type==='money-input'"
                                                             :ref="rowItem.key"
                                                             :item="rowItem"
@@ -150,6 +150,21 @@
                                                            :item="rowItem"
                                                            :all-disabled="allDisabled"
                                                            v-model.trim="formData[rowItem.key]"/>
+                                            <FormAreaSelect v-if="rowItem.type==='area-select'"
+                                                            :ref="rowItem.key"
+                                                            :item="rowItem"
+                                                            :all-disabled="allDisabled"
+                                                            v-model.trim="formData[rowItem.key]"/>
+                                            <FormMulLinkage v-if="rowItem.type==='mul-linkage'"
+                                                            :ref="rowItem.key"
+                                                            :item="rowItem"
+                                                            :all-disabled="allDisabled"
+                                                            v-model.trim="formData[rowItem.key]"/>
+                                            <FormNormalNumberInput v-if="rowItem.type==='normal-number'"
+                                                                   :ref="rowItem.key"
+                                                                   :item="rowItem"
+                                                                   :all-disabled="allDisabled"
+                                                                   v-model.trim="formData[rowItem.key]"/>
                                         </el-form-item>
 
                                         <ChildForm v-if="rowItem.type === 'child-form'"
@@ -183,6 +198,9 @@
     import FormRadio from './form_item/form_radio';
     import FormMoneyInput from './form_item/form_money_input';
     import FormRateInput from './form_item/form_rate_input';
+    import FormAreaSelect from './form_item/form_area_select';
+    import FormMulLinkage from './form_item/form_mul_linkage';
+    import FormNormalNumberInput from './form_item/form_normal_number_input';
 
     import ChildForm from './child_form';
     import FormMixin from './mixin';
@@ -218,11 +236,7 @@
                 type: Boolean,
                 default: false,
             },
-            // 动态下拉框的url
-            dictUrl: {
-                type: String,
-                default: '/wkbbackend/queryByCategoryCodeList'
-            }
+            // 数据字典的配置
         },
         data () {
             return {
@@ -283,6 +297,7 @@
         provide () {
             return {
                 // formData: this.formData,
+                dynamicSelectOption: this.dynamicSelectOption,
                 dynamicDict: this.dynamicDict,
                 // 状态切换函数
                 statusChangeFn: {
@@ -299,8 +314,7 @@
                 // 会动态变化的数据（注意，来自 props【更上级组件】的数据，不能放这个里面，只能显式的通过 props 往下面传）
                 changeData: this.changeData,
                 formItemType: '',
-                childChangeData: {},
-                dictKey: this.dictKey
+                childChangeData: {}
             };
         },
         watch: {
@@ -343,6 +357,8 @@
                                     // 2.2 该要素没有默认值，使用通用默认值
                                     if (field.type === 'child-form') {
                                         this.$set(this.formData, field.key, []);
+                                    } else if (field.type === 'area-select') {
+                                        this.$set(this.formData, field.key, [ '', '', '' ]);
                                     } else {
                                         this.$set(this.formData, field.key, '');
                                     }
@@ -660,9 +676,35 @@
                             if (field.type === 'dynamic-select' && field.parentKey) {
                                 // 再做一次去重判断。如果该字典已经在里面了，再跳过这一个
                                 if (parentCodeList.indexOf(field.parentKey) === -1) {
-                                    parentCodeList.push(field.parentKey);
-                                    // 初始化一个数组
-                                    this.$set(this.dynamicDict, field.parentKey, []);
+                                    if (!(this.dynamicDict[field.parentKey] && this.dynamicDict[field.parentKey].length !== 0)) {
+                                        parentCodeList.push(field.parentKey);
+                                        // 初始化一个数组
+                                        this.$set(this.dynamicDict, field.parentKey, []);
+                                    }
+                                }
+                            }
+                            // 地区选择框，三级联动
+                            if (field.type === 'area-select') {
+                                const firstParentKey = field.firstParentKey || '10020';
+                                const secondParentKey = field.firstParentKey || '10021';
+                                const thirdParentKey = field.firstParentKey || '10022';
+                                if (parentCodeList.indexOf(firstParentKey) === -1) {
+                                    if (!(this.dynamicDict[firstParentKey] && this.dynamicDict[firstParentKey].length !== 0)) {
+                                        parentCodeList.push(firstParentKey);
+                                        this.$set(this.dynamicDict, firstParentKey, []);
+                                    }
+                                }
+                                if (parentCodeList.indexOf(secondParentKey) === -1) {
+                                    if (!(this.dynamicDict[secondParentKey] && this.dynamicDict[secondParentKey].length !== 0)) {
+                                        parentCodeList.push(secondParentKey);
+                                        this.$set(this.dynamicDict, secondParentKey, []);
+                                    }
+                                }
+                                if (parentCodeList.indexOf(thirdParentKey) === -1) {
+                                    if (!(this.dynamicDict[thirdParentKey] && this.dynamicDict[thirdParentKey].length !== 0)) {
+                                        parentCodeList.push(thirdParentKey);
+                                        this.$set(this.dynamicDict, thirdParentKey, []);
+                                    }
                                 }
                             }
                         });
@@ -673,16 +715,24 @@
                 }
 
                 // 通过父 key 拿到所有元素
-                const payload = {
-                    categoryCodeList: parentCodeList
-                };
+                let payload = null;
+                if (this.dynamicSelectOption.queryKey) {
+                    payload = {
+                        [this.dynamicSelectOption.queryKey]: parentCodeList
+                    };
+                } else {
+                    payload = parentCodeList;
+                }
                 // console.log('WtiForm 拉取动态字典');
-                axios.post(this.dictUrl, payload).then(res => {
+                axios.post(this.dynamicSelectOption.dictUrl, payload).then(res => {
                     if (res.code === 200) {
                         if (res.data.length > 0) {
                             // 加载到结果
                             res.data.forEach(item => {
-                                this.dynamicDict[item.categoryCode].push(
+                                // 用每个返回值的 pCode 作为 key，将该项添加到数组里。
+                                // 注：之所以是数组，是因为之前已经初始化过了（parentKey 为 Code）
+                                const pCode = item[this.dynamicSelectOption.parentKey];
+                                this.dynamicDict[pCode].push(
                                     item
                                 );
                             });
@@ -890,6 +940,9 @@
             FormNormalSelect,
             FormMoneyInput,
             FormRateInput,
+            FormAreaSelect,
+            FormMulLinkage,
+            FormNormalNumberInput,
             ChildForm,
         },
     };
@@ -1061,6 +1114,20 @@
             margin-top: 11px;
         }
     }
+}
+
+.wti-form-v2 /deep/ input::-webkit-outer-spin-button,
+.wti-form-v2 /deep/ input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.wti-form-v2 /deep/ input[type="number"] {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.wti-form-v2 /deep/ input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 </style>

@@ -12,21 +12,23 @@
                       @keydown.native="onKeydown($event)"
                       @blur="e => onBlur(item, e)"
                       @focus="e => onFocus(item, e)"
+                      v-bind="bindOptions"
                       :clearable="true">
-                <template slot="append" class="suffixMsg">{{ item.suffixMsg }}</template>
+                <template slot="append">{{ append }}</template>
             </el-input>
             <el-input v-model.trim="dealInputValue"
                       :placeholder="getPlaceholder(item)"
                       :disabled="getDisabled"
                       class="input-readonly"
                       type="input"
+                      v-bind="bindOptions"
                       :clearable="true">
-                <template slot="append" class="suffixMsg">{{ item.suffixMsg }}</template>
+                <template slot="append">{{ append }}</template>
             </el-input>
         </template>
         <div v-else :style="item.textStyle||{}">
             {{ dealInputValue || '-' }}
-            {{ symbolAfter }}
+            {{ append }}
         </div>
     </div>
 </template>
@@ -46,14 +48,14 @@
             };
         },
         computed: {
-            //
+            // 显示文字
             dealInputValue () {
                 if (this.value === '') {
                     return '';
                 }
                 let n = String(this.value);
                 // 先转，再处理。即把 0.123 转成 12.3 处理（用户看到的是 12.3）
-                if (this.item.suffixMsg === '%') {
+                if (this.append === '%') {
                     n = this.multiplyHundred(n);
                 }
                 const res = n.toString().replace(/\d+/, (n) => {
@@ -64,11 +66,14 @@
                 return res;
             },
             // 后置符号
-            symbolAfter () {
-                if (this.item.suffixMsg) {
+            append () {
+                // 兼容性处理
+                if (this.item.append) {
+                    return this.item.append;
+                } else if (this.item.suffixMsg) {
                     return this.item.suffixMsg;
                 } else {
-                    return '';
+                    return '%';
                 }
             },
             val: {
@@ -76,7 +81,7 @@
                     if (this.value === '') {
                         return '';
                     }
-                    if (this.item.suffixMsg === '%') {
+                    if (this.append === '%') {
                         const v = String(this.value);
                         return this.multiplyHundred(v);
                     } else {
@@ -99,7 +104,7 @@
                     if (this.item.positive && n && Number(n) < 0) {
                         n = '0';
                     }
-                    if (this.item.suffixMsg === '%') {
+                    if (this.append === '%') {
                         // 除以 100，确保是精确结果
                         n = this.turnHundredToDecimal(n);
                     }
@@ -128,7 +133,7 @@
                 }
 
                 // 0 或者空，则返回自己
-                if (value === '0' || value === '') {
+                if (value === '0' || value === '' || !value) {
                     return value;
                 }
 
@@ -197,6 +202,11 @@
                     throw new Error('入参不合法。参数必须是数字，并且大于 0');
                 }
 
+                // 0 或者空，则返回自己
+                if (value === '0' || value === '' || !value) {
+                    return value;
+                }
+
                 let n = String(value);
                 // 1、判断有没有小数点，没有小数点直接后面加 4 个 0
                 if (value.indexOf('.') === -1) {
@@ -240,56 +250,6 @@
                 return value;
             },
 
-
-            // 丢掉数字的小数点右边末尾的 0
-            // 例如入参是 1.2000，出参是 1.2
-            // 入参是 12.0000 ，出参是 12
-            throwPointRightZero (v) {
-                const n = String(v);
-                if (n.indexOf('.') > -1) {
-                    // 有小数点
-                    const list = n.split('.');
-                    let pointRight = list[1];
-                    pointRight = pointRight.replace(/[0]+$/g, '');
-                    if (pointRight.length === 0) {
-                        return list[0];
-                    } else {
-                        return list[0] + '.' + pointRight;
-                    }
-                } else {
-                    // 无小数点
-                    return n;
-                }
-            },
-
-            // 丢掉数字的小数点左边开头的 0
-            // 例如入参是 0123.45，出参是 123.45
-            // 入参是 00.12 ，出参是 0.12
-            throwPointLeftZero (v) {
-                let n = String(v);
-                if (n.indexOf('.') > -1) {
-                    // 有小数点
-                    const list = n.split('.');
-                    let pointLeft = list[0];
-                    pointLeft = pointLeft.replace(/^[0]+/g, '');
-                    if (pointLeft.length === 0) {
-                        return '0.' + list[1];
-                    } else {
-                        return pointLeft + '.' + list[1];
-                    }
-                } else {
-                    // 无小数点，那么直接把左边开头的 0 扔掉
-                    n = n.replace(/^[0]+/g, '');
-                    // 如果结果为空，并且 v 不是空（比如是 0），那么返回 0
-                    // 如果都是空，则返回空（这里不做处理）
-                    if (n === '' && v !== '') {
-                        n = '0';
-                    }
-                    // 无小数点
-                    return n;
-                }
-            },
-
             getClass () {
                 const c1 = `form-unqiue-${this.item.key}`;
                 const c2 = this.readonly ? 'is-readonly' : 'is-wr';
@@ -329,20 +289,15 @@
                         if (l[0].length === 0) {
                             newVal = '';
                         } else {
-                            newVal += '.';
                             // 自动补零
-                            for (let i = 0; i < this.item.zeroPadding; i++) {
-                                newVal += '0';
-                            }
+                            newVal += '.' + '0'.padEnd(this.item.zeroPadding, '0');
                         }
                     } else {
                         // 此时说明有小数点，那么小数位数多，则去掉多余的。位数小，则补零
                         const currentLength = l[1].length;
                         // 小数位数少，则补零
                         if (currentLength < this.item.zeroPadding) {
-                            for (let i = 0; i < this.item.zeroPadding - currentLength; i++) {
-                                newVal += '0';
-                            }
+                            newVal = l[0] + '.' + l[1].padEnd(this.item.zeroPadding, '0');
                         }
                         // 如果大于
                         if (currentLength > this.item.zeroPadding) {
@@ -365,13 +320,6 @@
                         return newS;
                     }
                 }).join('.');
-
-                if (newVal === '') {
-                    newVal = 0;
-                }
-                if (!this.item.returnString) {
-                    newVal = Number(newVal);
-                }
 
                 // 假如禁止输入负数，那么小于 0 则自动变为 0
                 if (this.item.positive && newVal < 0) {
@@ -400,41 +348,41 @@
 </script>
 
 <style scoped lang="less">
-@import '~common/less/config.less';
+    @import '~common/less/config.less';
 
-.form-item-box /deep/ .el-input__inner {
-    height: 36px;
-    line-height: 36px;
-}
+    .form-item-box /deep/ .el-input__inner {
+        height: 36px;
+        line-height: 36px;
+    }
 
-.input-wr {
-    z-index: 100;
-}
-
-.input-readonly {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-.is-wr {
     .input-wr {
-        opacity: 1;
+        z-index: 100;
     }
 
     .input-readonly {
-        display: none;
-    }
-}
-
-.is-readonly {
-    .input-wr {
-        opacity: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
     }
 
-    .input-readonly {
-        //display: none;
+    .is-wr {
+        .input-wr {
+            opacity: 1;
+        }
+
+        .input-readonly {
+            display: none;
+        }
     }
-}
+
+    .is-readonly {
+        .input-wr {
+            opacity: 0;
+        }
+
+        .input-readonly {
+            //display: none;
+        }
+    }
 
 </style>
