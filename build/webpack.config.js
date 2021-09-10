@@ -22,6 +22,7 @@ const cssLoaderConfig = {
 
 const cssConfig = isProd ? [
     // MiniCssExtractPlugin.loader,
+    'style-loader',
     cssLoaderConfig,
     {
         loader: 'postcss-loader',
