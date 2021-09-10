@@ -701,7 +701,7 @@
 </script>
 
 <style scoped lang="less">
-@import '~common/less/config.less';
+
 
 .child-form-container {
     width: 100%;
