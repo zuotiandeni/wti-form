@@ -47,7 +47,7 @@ const config = {
     entry: './app.js',
     // 出口文件
     output: {
-        path: resolve('dist'),
+        path: resolve('../'),
         filename: 'index.js',
         sourceMapFilename: '[name].[hash:8].map',
         libraryTarget: 'umd'

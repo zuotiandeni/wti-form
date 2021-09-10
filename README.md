@@ -2,11 +2,11 @@
 
 低代码表单组件
 
-2021.09.09：1.0.1 发布
+2021.09.10：1.0.2 发布
 
 文档示例地址：
 
-http://lovelovewall.com/wti_form_demo/home.html#/others/connection
+http://localhost:8080/home.html#/demo/base
 
 
 <p>
