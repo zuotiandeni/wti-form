@@ -6,7 +6,7 @@
 
 文档示例地址：
 
-http://localhost:8080/home.html#/demo/base
+http://lovelovewall.com/wti_form_demo/home.html#/demo/base
 
 
 <p>
