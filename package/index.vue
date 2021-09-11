@@ -170,6 +170,7 @@
                                         <ChildForm v-if="rowItem.type === 'child-form'"
                                                    :text-model="textModel"
                                                    :ref="rowItem.key"
+                                                   :all-disabled="allDisabled"
                                                    :item="rowItem"
                                                    v-model.trim="formData[rowItem.key]"/>
                                     </el-col>
@@ -667,6 +668,7 @@
             },
 
             // 找到 type="dynamic-select" 获取所有 parentCode，然后读取数据字典接口拉取对应的数据
+            // todo 这里的数据字典请求接口，应该最后合并到一起，由一个专门的数据字典请求管理器去请求，减低接口重复请求的情况
             loadDynamicSelectOptions () {
                 const parentCodeList = [];
                 // 遍历传入的数据
@@ -727,6 +729,15 @@
                 axios.post(this.dynamicSelectOption.dictUrl, payload).then(res => {
                     if (res.code === 200) {
                         if (res.data.length > 0) {
+                            // 因为可能多个地方同时调这个接口的原因，为了避免重复将内容添加到里面，所以，
+                            // 这里在赋值之前，需要先判断一下 parentCodeList 的每个值，其对应的 dynamicDict 里的哪一个数组，是否是空的
+                            // 如果不是空的，则将其置为空数组
+                            parentCodeList.forEach(pCode => {
+                                if (this.dynamicDict[pCode].length > 0) {
+                                    this.$set(this.dynamicDict, pCode, []);
+                                }
+                            });
+
                             // 加载到结果
                             res.data.forEach(item => {
                                 // 用每个返回值的 pCode 作为 key，将该项添加到数组里。
@@ -813,7 +824,6 @@
                     // 对数据进行过滤
                     const data = this.getData();
 
-
                     // 判断是否需要校验子表单
                     const childFormKeyList = [];
                     this.fields.forEach(filed => {
@@ -838,7 +848,13 @@
                             return this.$refs[key][0].validateForm();
                         });
                         Promise.all(validateList).then(() => {
-                            fn(true, data);
+                            // 父表单校验也通过了，才算都通过
+                            if (valid) {
+                                fn(true, data);
+                            } else {
+                                // 否则即使子表单校验通过，父表单校验没通过，也是算不通过的
+                                fn(false, data);
+                            }
                         }).catch(() => {
                             fn(false, data);
                         });
@@ -949,185 +965,185 @@
 </script>
 <style lang="less" type="text/less" scoped>
 
-.wti-form {
-    width: 100%;
+    .wti-form {
+        width: 100%;
 
-    .el-input__inner {
-        height: 36px !important;
-        line-height: 36px !important;
-        border: 1px solid #E2E3E6 !important;
-    }
-
-    .block-title {
-        position: relative;
-        height: 50px;
-        padding-top: 10px;
-        padding-bottom: 24px;
-        font-size: 16px;
-
-        // label 左边的红色竖线
-        .block-line {
-            float: left;
-            width: 4px;
-            height: 16px;
-            background: #EE473A;
-            border-radius: 2px;
-            display: inline-block;
+        .el-input__inner {
+            height: 36px !important;
+            line-height: 36px !important;
+            border: 1px solid #E2E3E6 !important;
         }
-
-        .block-text {
-            margin-left: 10px;
-            float: left;
-            height: 16px;
-            font-size: 16px;
-            color: #21273A;
-            font-weight: 600 !important;
-            vertical-align: top;
-            line-height: 16px;
-        }
-
-        .block-fold-btn {
-            float: right;
-            margin-right: 30px;
-            height: 16px;
-            line-height: 16px;
-            font-size: 14px;
-            cursor: pointer;
-            user-select: none;
-        }
-    }
-
-}
-
-// 带边框的表单组件
-.border-form {
-    .block-item {
-        border: 1px solid #DDE0EA;
-        border-radius: 8px;
-        margin-bottom: 40px;
-        background: #fff;
-        padding-bottom: 15px;
 
         .block-title {
-            height: 60px;
-            line-height: 60px;
-            background: #f8f9fb;
-            padding: 20px 0 18px 24px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            position: relative;
+            height: 50px;
+            padding-top: 10px;
+            padding-bottom: 24px;
+            font-size: 16px;
+
+            // label 左边的红色竖线
+            .block-line {
+                float: left;
+                width: 4px;
+                height: 16px;
+                background: #EE473A;
+                border-radius: 2px;
+                display: inline-block;
+            }
+
+            .block-text {
+                margin-left: 10px;
+                float: left;
+                height: 16px;
+                font-size: 16px;
+                color: #21273A;
+                font-weight: 600 !important;
+                vertical-align: top;
+                line-height: 16px;
+            }
+
+            .block-fold-btn {
+                float: right;
+                margin-right: 30px;
+                height: 16px;
+                line-height: 16px;
+                font-size: 14px;
+                cursor: pointer;
+                user-select: none;
+            }
         }
 
-        .block-title + .block-content {
-            padding-top: 14px;
-        }
-
-        .block-content {
-            padding: 0 24px;
-        }
-
-        .block-hidden {
-            display: none;
-        }
-    }
-}
-
-
-.el-divider {
-    background-color: #F4F5F8;
-}
-
-.scan-type {
-    position: relative;
-    height: 36px;
-    line-height: 36px;
-    margin-bottom: 16px;
-
-    .all-fold-btn {
-        display: inline-block;
-        padding: 0 20px;
-        height: 36px;
-        background: #EE473A;
-        border: 1px solid #EE473A;
-        border-radius: 4px;
-        color: #fff;
-        cursor: pointer;
-        text-align: center;
-        font-size: 14px;
-        vertical-align: top;
-
-        .all-fold-icon {
-            width: 14px;
-            height: 14px;
-            vertical-align: top;
-            margin-top: 11px;
-        }
     }
 
-    .block-btn-list {
-        float: left;
-
-        .block-btn {
+    // 带边框的表单组件
+    .border-form {
+        .block-item {
             border: 1px solid #DDE0EA;
-            height: 36px;
-            line-height: 36px;
-            padding: 0 18px;
-            color: #3A4566;
-            display: inline-block;
-            cursor: pointer;
-            user-select: none;
-        }
+            border-radius: 8px;
+            margin-bottom: 40px;
+            background: #fff;
+            padding-bottom: 15px;
 
-        .block-btn.focus {
-            background: #EE473A;
-            color: #fff;
-        }
+            .block-title {
+                height: 60px;
+                line-height: 60px;
+                background: #f8f9fb;
+                padding: 20px 0 18px 24px;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
 
-        .block-btn:first-child {
-            border-radius: 4px 0 0 4px;
+            .block-title + .block-content {
+                padding-top: 14px;
+            }
 
-        }
+            .block-content {
+                padding: 0 24px;
+            }
 
-        .block-btn:last-child {
-            border-radius: 0 4px 4px 0;
-
+            .block-hidden {
+                display: none;
+            }
         }
     }
 
-    .scan-type-btn {
-        display: inline-block;
-        float: right;
-        padding: 0 20px;
+
+    .el-divider {
+        background-color: #F4F5F8;
+    }
+
+    .scan-type {
+        position: relative;
         height: 36px;
-        border: 1px solid #AEB3BF;
-        border-radius: 4px;
-        color: #12182A;
-        cursor: pointer;
-        text-align: center;
-        font-size: 14px;
-        vertical-align: top;
-        user-select: none;
+        line-height: 36px;
+        margin-bottom: 16px;
 
-        .scan-type-icon {
-            width: 14px;
-            height: 14px;
+        .all-fold-btn {
+            display: inline-block;
+            padding: 0 20px;
+            height: 36px;
+            background: #EE473A;
+            border: 1px solid #EE473A;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
             vertical-align: top;
-            margin-top: 11px;
+
+            .all-fold-icon {
+                width: 14px;
+                height: 14px;
+                vertical-align: top;
+                margin-top: 11px;
+            }
+        }
+
+        .block-btn-list {
+            float: left;
+
+            .block-btn {
+                border: 1px solid #DDE0EA;
+                height: 36px;
+                line-height: 36px;
+                padding: 0 18px;
+                color: #3A4566;
+                display: inline-block;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .block-btn.focus {
+                background: #EE473A;
+                color: #fff;
+            }
+
+            .block-btn:first-child {
+                border-radius: 4px 0 0 4px;
+
+            }
+
+            .block-btn:last-child {
+                border-radius: 0 4px 4px 0;
+
+            }
+        }
+
+        .scan-type-btn {
+            display: inline-block;
+            float: right;
+            padding: 0 20px;
+            height: 36px;
+            border: 1px solid #AEB3BF;
+            border-radius: 4px;
+            color: #12182A;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            vertical-align: top;
+            user-select: none;
+
+            .scan-type-icon {
+                width: 14px;
+                height: 14px;
+                vertical-align: top;
+                margin-top: 11px;
+            }
         }
     }
-}
 
-.wti-form-v2 /deep/ input::-webkit-outer-spin-button,
-.wti-form-v2 /deep/ input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-}
+    .wti-form-v2 /deep/ input::-webkit-outer-spin-button,
+    .wti-form-v2 /deep/ input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
 
-.wti-form-v2 /deep/ input[type="number"] {
-    -webkit-appearance: none;
-    appearance: none;
-}
+    .wti-form-v2 /deep/ input[type="number"] {
+        -webkit-appearance: none;
+        appearance: none;
+    }
 
-.wti-form-v2 /deep/ input[type="number"] {
-    -moz-appearance: textfield;
-}
+    .wti-form-v2 /deep/ input[type="number"] {
+        -moz-appearance: textfield;
+    }
 
 </style>

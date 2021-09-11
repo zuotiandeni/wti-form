@@ -44,7 +44,7 @@ const cssConfig = isProd ? [
 ];
 
 const config = {
-    entry: './app.js',
+    entry: './index.js',
     // 出口文件
     output: {
         path: resolve('../'),

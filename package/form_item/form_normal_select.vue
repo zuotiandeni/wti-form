@@ -63,7 +63,7 @@
 <style scoped lang="less">
 
 
-.form-item-box /deep/ .el-input {
+    .form-item-box /deep/ .el-input {
     position: relative;
     width: 100%;
     height: 36px;
