@@ -55,8 +55,6 @@
 </script>
 
 <style scoped lang="less">
-    @import '~common/less/config.less';
-
     .form-item-box {
         margin-bottom: 20px;
     }
