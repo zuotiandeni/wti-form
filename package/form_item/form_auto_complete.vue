@@ -11,7 +11,7 @@
                          @focus="e => onFocus(item, e)"
                          :clearable="true"
                          value-key="value"
-                         :fetch-suggestions="querySearchAsync"
+                         :fetch-suggestions="item.querySearchAsync ? item.querySearchAsync: querySearchAsync"
                          @select="handleSelect"
                          v-bind="bindOptions"
                          v-if="!getTextModel"/>

@@ -201,7 +201,7 @@
         mounted () {
             if (this.value && this.value instanceof Array && this.value.length > 0) {
                 this.value.forEach(childFormData => {
-                    this.addChildForm(childFormData);
+                    this.addChildForm(childFormData, true);
                 });
             } else {
                 this.addChildForm();
@@ -347,7 +347,7 @@
             },
 
             // 添加一个子表单到 childFormFileds 最后
-            addChildForm (childFormData) {
+            addChildForm (childFormData, notAddValue) {
                 // 禁用时禁止操作
                 const {childrenForm} = this.item;
                 // 插入 childFormFileds
@@ -376,7 +376,9 @@
                         defaultHiddenList.push(child.key);
                     }
                 });
-                this.val.push(obj);
+                if (!notAddValue) {
+                    this.val.push(obj);
+                }
 
                 const formKey = this.item.key;
 
@@ -742,82 +744,82 @@
 <style scoped lang="less">
 
 
-    .child-form-container {
-        width: 100%;
+.child-form-container {
+    width: 100%;
 
-        .child-form {
-            background: #F8F9FB;
-            border-radius: 4px;
-            margin-bottom: 24px;
+    .child-form {
+        background: #F8F9FB;
+        border-radius: 4px;
+        margin-bottom: 24px;
 
-            .child-form-head {
-                position: relative;
-                height: 44px;
-                line-height: 44px;
-                text-align: left;
-                padding: 0 20px;
-                font-size: 14px;
-                color: #3A4566;
-                border-bottom: 1px solid #E7E8EB;
-                font-weight: 500;
+        .child-form-head {
+            position: relative;
+            height: 44px;
+            line-height: 44px;
+            text-align: left;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #3A4566;
+            border-bottom: 1px solid #E7E8EB;
+            font-weight: 500;
 
-                .cfh-flod, .cfh-unflod {
-                    position: absolute;
-                    top: 16px;
-                    right: 20px;
-                    width: 12px;
-                    height: 6px;
-                    cursor: pointer;
-                    user-select: none;
+            .cfh-flod, .cfh-unflod {
+                position: absolute;
+                top: 16px;
+                right: 20px;
+                width: 12px;
+                height: 6px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .cfh-del {
+                position: absolute;
+                top: 0;
+                right: 60px;
+                height: 40px;
+                line-height: 40px;
+                cursor: pointer;
+                user-select: none;
+
+                .cfh-del-btn {
+                    position: relative;
+                    height: 16px;
+                    width: 16px;
+                    margin-top: 12px;
+                    vertical-align: top;
                 }
 
-                .cfh-del {
-                    position: absolute;
-                    top: 0;
-                    right: 60px;
+                .cfh-del-text {
+                    display: inline-block;
+                    position: relative;
                     height: 40px;
                     line-height: 40px;
-                    cursor: pointer;
-                    user-select: none;
-
-                    .cfh-del-btn {
-                        position: relative;
-                        height: 16px;
-                        width: 16px;
-                        margin-top: 12px;
-                        vertical-align: top;
-                    }
-
-                    .cfh-del-text {
-                        display: inline-block;
-                        position: relative;
-                        height: 40px;
-                        line-height: 40px;
-                        vertical-align: top;
-                        font-size: 14px;
-                        color: #949AAE;
-                        font-weight: 400;
-                    }
+                    vertical-align: top;
+                    font-size: 14px;
+                    color: #949AAE;
+                    font-weight: 400;
                 }
             }
-
-            .child-form-body {
-                padding: 0 20px;
-            }
         }
 
-        .child-form-add-btn {
-            position: relative;
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            background: #FBFCFD;
-            border: 1px dashed #ABB3CC;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
-            color: #12182A;
-            cursor: pointer;
+        .child-form-body {
+            padding: 0 20px;
         }
     }
+
+    .child-form-add-btn {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        background: #FBFCFD;
+        border: 1px dashed #ABB3CC;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+        color: #12182A;
+        cursor: pointer;
+    }
+}
 </style>
