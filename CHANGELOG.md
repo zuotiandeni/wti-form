@@ -19,7 +19,7 @@
 
 > 1.0.10
 
-1. 再次优化输入搜索下拉框，可以在配置里添加自定义回填函数，格式是 ``querySearchAsync(queryString, cb, this)``
+1. 再次优化输入搜索下拉框，可以在配置里添加自定义回填函数，格式是 ``querySearchAsync(queryString, cb, formItem)``
 
 > 1.0.9
 
