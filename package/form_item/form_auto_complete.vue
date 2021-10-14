@@ -11,7 +11,7 @@
                          @focus="e => onFocus(item, e)"
                          :clearable="true"
                          value-key="value"
-                         :fetch-suggestions="item.querySearchAsync ? item.querySearchAsync: querySearchAsync"
+                         :fetch-suggestions="querySearchAsync"
                          @select="handleSelect"
                          v-bind="bindOptions"
                          v-if="!getTextModel"/>
@@ -28,6 +28,12 @@
         mixins: [ FormMixin ],
         methods: {
             querySearchAsync (queryString, cb) {
+                // 如果自定义请求函数，则使用自定义请求函数
+                if (this.item.querySearchAsync) {
+                    this.item.querySearchAsync(queryString, cb, this);
+                    return;
+                }
+
                 const payload = {
                     [this.item.searchKey]: queryString
                 };
