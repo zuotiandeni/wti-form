@@ -295,5 +295,7 @@
             //display: none;
         }
     }
-
+    .input-wr /deep/ .el-input__inner {
+        line-height: 1px !important;
+    }
 </style>

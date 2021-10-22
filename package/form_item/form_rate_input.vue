@@ -351,7 +351,7 @@
 
     .form-item-box /deep/ .el-input__inner {
         height: 36px;
-        line-height: 36px;
+        line-height: 1px !important;
     }
 
     .input-wr {
