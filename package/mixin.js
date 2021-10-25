@@ -55,6 +55,7 @@ export default {
             const c = blockItem.class;
             return Object.assign({}, c, {
                 'block-item': this.borderForm,
+                'block-hide': this.foldBlockList.indexOf(blockItem.label) > -1
             });
         },
 

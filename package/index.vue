@@ -13,7 +13,7 @@
                         d="M541.184 731.940571V373.76l166.326857 168.374857a29.147429 29.147429 0 1 0 41.179429-41.289143l-237.129143-237.750857-236.068572 236.836572a28.818286 28.818286 0 1 0 39.606858 41.837714l168.740571-167.899429v358.107429a28.708571 28.708571 0 0 0 57.344 0z"
                         fill="#fff"/>
                 </svg>
-                全部收起/展开
+                全部{{ allFlod ? '收起' : '展开' }}
             </div>
 
             <div class="block-btn-list" v-if="showScanTypeBtn && scanType === 'single'">
@@ -300,6 +300,22 @@
         watch: {
             textModel (n) {
                 this.$set(this.changeData, 'textModel', n);
+            }
+        },
+        computed: {
+            allFlod () {
+                const labelList = [];
+                this.fields.forEach(block => {
+                    // 如果没有 label，则不支持收起
+                    if (block.label) {
+                        labelList.push(block.label);
+                    }
+                });
+                if (this.foldBlockList.length === labelList.length) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         },
         methods: {
@@ -996,6 +1012,7 @@
             padding-top: 10px;
             padding-bottom: 24px;
             font-size: 16px;
+            border-bottom: 1px solid #DDE0EA;
 
             // label 左边的红色竖线
             .block-line {
@@ -1059,6 +1076,16 @@
 
             .block-hidden {
                 display: none;
+            }
+        }
+
+        .block-hide {
+            padding-bottom: 0;
+
+            .block-title {
+                border-bottom: 0;
+                overflow: hidden;
+                border-radius: 8px;
             }
         }
     }
