@@ -1006,6 +1006,11 @@
             border: 1px solid #E2E3E6 !important;
         }
 
+        /deep/ .el-input.is-active .el-input__inner, /deep/ .el-input__inner:focus,
+        /deep/ .el-select .el-input.is-focus .el-input__inner, /deep/ .el-textarea__inner:focus {
+            border-color: #ABB3CC !important;
+        }
+
         .block-title {
             position: relative;
             height: 50px;

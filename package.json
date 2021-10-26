@@ -1,6 +1,6 @@
 {
   "name": "wti-form",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "低代码表单组件",
   "main": "index.js",
   "scripts": {
