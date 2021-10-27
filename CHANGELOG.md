@@ -14,8 +14,11 @@
 
 ![Github stars](https://img.shields.io/github/stars/qq20004604/wti-form.svg?label=Stars&color=success)
 
-
 ### 更新历史
+
+> 1.0.14
+
+1. 添加新的表单元素：普通多选下拉框，使用 options 获取下拉选项（未来将添加数据字典版本）
 
 > 1.0.13
 

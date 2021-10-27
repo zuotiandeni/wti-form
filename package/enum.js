@@ -21,6 +21,7 @@ const FormItemTypeText = {
     RateInput: '利率输入框',
     MulLinkage: '三级联动输入框',
     TextArea: '文本域输入框',
+    MulSelectNormal: '普通多选下拉框',
 };
 
 const TypeList = [
@@ -93,6 +94,11 @@ const TypeList = [
         // 文本域输入框
         label: FormItemTypeText.TextArea,
         value: 'textarea',
+    },
+    {
+        // 文本域输入框
+        label: FormItemTypeText.MulSelectNormal,
+        value: 'mul-select-normal',
     },
 ];
 

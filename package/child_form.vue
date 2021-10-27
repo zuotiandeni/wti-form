@@ -113,6 +113,10 @@
                                                                    v-bind="getProps(rowItem)"
                                                                    :random-id="childField.randomId"
                                                                    v-model.trim="val[rowItem.key]"/>
+                                            <FormMulSelectNormal v-if="rowItem.type==='mul-select-normal'"
+                                                                 v-bind="getProps(rowItem)"
+                                                                 :random-id="childField.randomId"
+                                                                 v-model.trim="val[rowItem.key]"/>
                                         </el-form-item>
                                     </el-col>
                                 </div>
@@ -148,6 +152,7 @@
     import FormMulLinkage from './form_item/form_mul_linkage';
     import FormNormalNumberInput from './form_item/form_normal_number_input';
     import axios from 'axios';
+    import FormMulSelectNormal from './form_item/form_mul_select_normal';
 
     export default {
         name: 'ChildForm',
@@ -737,6 +742,7 @@
             FormRateInput,
             FormMulLinkage,
             FormNormalNumberInput,
+            FormMulSelectNormal,
         }
     };
 </script>

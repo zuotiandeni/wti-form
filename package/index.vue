@@ -135,6 +135,9 @@
                                             <FormNormalNumberInput v-if="rowItem.type==='normal-number'"
                                                                    v-bind="getProps(rowItem)"
                                                                    v-model.trim="formData[rowItem.key]"/>
+                                            <FormMulSelectNormal v-if="rowItem.type==='mul-select-normal'"
+                                                                 v-bind="getProps(rowItem)"
+                                                                 v-model.trim="formData[rowItem.key]"/>
                                         </el-form-item>
 
                                         <ChildForm v-if="rowItem.type === 'child-form'"
@@ -178,6 +181,9 @@
     import FormAreaSelect from './form_item/form_area_select';
     import FormMulLinkage from './form_item/form_mul_linkage';
     import FormNormalNumberInput from './form_item/form_normal_number_input';
+    import FormMulSelectNormal from './form_item/form_mul_select_normal';
+
+
     import TableReadonly from './form_item/table_readonly';
 
     import ChildForm from './child_form';
@@ -351,7 +357,9 @@
                                     });
                                 } else {
                                     // 2.2 该要素没有默认值，使用通用默认值
-                                    if (field.type === 'child-form' || field.type === 'table-readonly') {
+                                    if (field.type === 'child-form' ||
+                                        field.type === 'table-readonly' ||
+                                        field.type === 'mul-select-normal') {
                                         this.$set(this.formData, field.key, []);
                                     } else if (field.type === 'area-select') {
                                         this.$set(this.formData, field.key, [ '', '', '' ]);
@@ -989,6 +997,7 @@
             FormAreaSelect,
             FormMulLinkage,
             FormNormalNumberInput,
+            FormMulSelectNormal,
 
             TableReadonly,
             ChildForm,

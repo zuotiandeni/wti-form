@@ -1,5 +1,5 @@
 <template>
-    <!--  字典下拉框（指通过数据字典获取选项）  -->
+    <!--  三级联动下拉框（通过数据字典获取选项）  -->
     <div :style="item.style||{}"
          :class="`form-unqiue-${item.key}`"
          class="form-item-box">
