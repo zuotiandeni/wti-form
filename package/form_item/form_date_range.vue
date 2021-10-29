@@ -13,7 +13,7 @@
                         :clearable="true"
                         v-bind="bindOptions"
                         v-if="!getTextModel"/>
-        <div v-else :style="item.textStyle||{}">{{ textModelValue || '-' }}</div>
+        <div v-else :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
     </div>
 </template>
 
@@ -62,8 +62,38 @@
 
 
     .form-item-box /deep/ .el-date-editor--daterange {
-    position: relative;
-    width: 100%;
-    height: 36px;
-}
+        position: relative;
+        width: 100%;
+        height: 36px;
+
+        .el-input__inner {
+            position: absolute;
+            width: 100%;
+            height: 36px;
+            line-height: 36px;
+            padding-right: 10px;
+            padding-left: 32px;
+        }
+
+        .el-range__icon {
+            position: relative;
+            left: 7px;
+            width: 16px;
+            height: 36px;
+
+            &:before {
+                font-size: 16px;
+                line-height: 36px;
+            }
+        }
+
+        .el-range-separator {
+            line-height: 26px;
+        }
+
+        .el-input__icon.el-range__close-icon {
+            position: absolute;
+            right: 3px;
+        }
+    }
 </style>

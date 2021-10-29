@@ -13,7 +13,7 @@
                        :label="option[dynamicSelectOption.label]"
                        :value="option[dynamicSelectOption.value]"/>
         </el-select>
-        <div v-else :style="item.textStyle || {}">{{ textModelValue || '-' }}</div>
+        <div v-else :style="item.textStyle || {}" class="form-input-text">{{ textModelValue || '-' }}</div>
     </div>
 </template>
 
@@ -55,19 +55,20 @@
 
 <style scoped lang="less">
 
-    .form-item-box /deep/ .el-input {
-        position: relative;
-        width: 100%;
-        height: 36px;
-
-        .el-input__inner {
-            position: absolute;
+    .form-item-box {
+        /deep/ .el-input {
+            position: relative;
             width: 100%;
             height: 36px;
-            line-height: 36px;
-            padding-right: 10px;
-            padding-left: 12px;
+
+            .el-input__inner {
+                position: absolute;
+                width: 100%;
+                height: 36px;
+                line-height: 36px;
+                padding-right: 10px;
+                padding-left: 12px;
+            }
         }
     }
-
 </style>

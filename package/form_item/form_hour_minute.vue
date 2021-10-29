@@ -15,7 +15,7 @@
                         :value-format="item['value-format'] || 'HH:mm:00'"
                         v-bind="bindOptions"
                         v-if="!getTextModel"/>
-        <div v-else :style="item.textStyle||{}">{{ val || '-' }}</div>
+        <div v-else :style="item.textStyle||{}" class="form-input-text">{{ val || '-' }}</div>
     </div>
 </template>
 
@@ -30,34 +30,34 @@
 </script>
 
 <style scoped lang="less">
-
-
     .form-item-box /deep/ .el-input {
-    position: relative;
-    width: 100%;
-    height: 36px;
-
-    .el-input__inner {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: 36px;
-        line-height: 36px;
-        padding-right: 10px;
-        padding-left: 12px;
-    }
 
-    .el-input__prefix {
-        left: inherit;
-        right: 5px;
-
-        .el-input__icon {
-            line-height: 100%;
-        }
-
-        .el-input__icon:before {
-            font-size: 16px;
+        .el-input__inner {
+            position: absolute;
+            width: 100%;
+            height: 36px;
             line-height: 36px;
+            padding-right: 10px;
+            padding-left: 32px;
         }
+
+        /deep/ .el-input__prefix {
+            left: 12px;
+
+            .el-input__icon {
+                line-height: 100%;
+                display: block;
+                width: 16px;
+            }
+
+            .el-input__icon:before {
+                font-size: 16px;
+                line-height: 36px;
+            }
+        }
+
     }
-}
 </style>

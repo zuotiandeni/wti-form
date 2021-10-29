@@ -15,7 +15,7 @@
                          @select="handleSelect"
                          v-bind="bindOptions"
                          v-if="!getTextModel"/>
-        <div v-else :style="item.textStyle||{}">{{ val || '-' }}</div>
+        <div v-else :style="item.textStyle||{}" class="form-input-text">{{ val || '-' }}</div>
     </div>
 </template>
 
@@ -104,5 +104,20 @@
 
     .auto-complte-input {
         width: 100%;
+    }
+
+    .form-item-box {
+
+        /deep/ .el-input {
+            position: relative;
+            width: 100%;
+            height: 36px;
+
+            .el-input__inner {
+                vertical-align: top;
+                height: 36px;
+                line-height: 36px;
+            }
+        }
     }
 </style>

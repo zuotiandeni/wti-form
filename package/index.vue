@@ -1009,10 +1009,72 @@
     .wti-form {
         width: 100%;
 
-        .el-input__inner {
+        // 1、标题文字
+        /deep/ .el-form-item__label {
+            min-height: 36px;
+            line-height: 36px;
+            height: auto;
+            padding-bottom: 0;
+        }
+
+        /deep/ .el-form-item__content {
+            line-height: 36px;
+
+            .form-input-text {
+                line-height: 36px;
+                //white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+
+        /deep/ .el-form-item {
+            margin-bottom: 32px;
+
+            .el-form-item__label {
+                height: auto;
+            }
+
+            .form-item-box {
+                height: auto;
+            }
+
+            .form-input-text {
+                min-height: 36px;
+                height: auto;
+                line-height: 36px;
+            }
+        }
+
+        /deep/ .form-item-box {
+            height: 36px;
+            line-height: 36px;
+
+            .el-radio-group {
+                vertical-align: top;
+                margin-top: 10px;
+            }
+
+            .el-input__icon {
+                height: 36px;
+                line-height: 36px;
+            }
+        }
+
+        /deep/ .el-input__inner {
+            vertical-align: top;
             height: 36px !important;
             line-height: 36px !important;
             border: 1px solid #E2E3E6 !important;
+            padding-left: 12px;
+        }
+
+        /deep/ .el-textarea__inner {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        /deep/ .el-form-item {
+            margin-bottom: 32px;
         }
 
         /deep/ .el-input.is-active .el-input__inner, /deep/ .el-input__inner:focus,
@@ -1138,11 +1200,12 @@
 
         .block-btn-list {
             float: left;
+            height: 36px;
 
             .block-btn {
                 border: 1px solid #DDE0EA;
                 height: 36px;
-                line-height: 36px;
+                line-height: 34px;
                 padding: 0 18px;
                 color: #3A4566;
                 display: inline-block;

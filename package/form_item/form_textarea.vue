@@ -2,7 +2,7 @@
     <!-- 普通输入框 -->
     <div :style="item.style||{}"
          :class="`form-unqiue-${item.key}`"
-         class="form-input-box form-item-box">
+         class="form-input-box form-area-box">
         <el-input v-model="val"
                   :placeholder="getPlaceholder(item)"
                   :disabled="getDisabled"
@@ -14,7 +14,7 @@
                   :resize="item.resize || 'none'"
                   v-bind="item"
                   v-if="!getTextModel"/>
-        <div v-else :style="item.textStyle || {}">
+        <div v-else :style="item.textStyle || {}" class="form-input-text">
             {{ val || '-' }}
         </div>
     </div>
@@ -60,4 +60,12 @@
     .form-input-box /deep/ .el-input-group__prepend, .single-input .form-input-box /deep/ .el-input-group__append {
         padding: 0 10px;
     }
+
+    .form-area-box {
+        /deep/ .el-form-item__content {
+            height: auto;
+        }
+    }
+
+
 </style>

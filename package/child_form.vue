@@ -12,7 +12,7 @@
                      xmlns="http://www.w3.org/2000/svg"
                      width="16" height="8"
                      @click="()=>flodChildField(childField.randomId)">
-                    <path d="M0 0 L16 0 L8 8 Z" fill="#777B88"/>
+                    <path d="M0 0 L16 0 L8 8 Z" fill="#787B87"/>
                 </svg>
 
                 <svg v-if="foldList.indexOf(childField.randomId) > -1"
@@ -22,14 +22,14 @@
                      xmlns="http://www.w3.org/2000/svg"
                      width="16" height="8"
                      @click="()=>flodChildField(childField.randomId)">
-                    <path d="M0 8 L16 8 L8 0 Z" fill="#777B88"/>
+                    <path d="M0 8 L16 8 L8 0 Z" fill="#787B87"/>
                 </svg>
 
                 <div class="cfh-del"
                      v-if="!textModel"
                      @click="()=>allDisabled ? '' : deleteChildForm(childField.randomId)">
                     <img
-                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAxUlEQVR42uWSsQ0CMQxFbwYKJmAGmAI2oENsglgg9onEUFBSxLkOalo6pkCIGeB+ER0KKEeRjkhfsvxffhwlVfHF22ZGVs/k9PIu9OD1BhjnH+yUWy0TMbyvm0SOA5awAGisf7LzqzQAPXiowWJPd+ouTMj6G1m9Y9ycwICtRcfJ6LqB8hfsuKxB0oyM6Dx6qNH7OQD3xLjRQ43ePwWQhClZ1eihRi/lyj4jubAm568YNScwYD8C6v1p2JqHvp8IBmxVar0AUiAwjfTBZFwAAAAASUVORK5CYII="
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACh0lEQVRYCe1Xz2sTQRSeN7uKHoQoBMRKL4I3Ragg2FNvXjTNpUhBemmEpP+Agt4U8VQ8JAUTkCIUodAQRPBk/gEFEfFSvAhVULBFxF/p7vObbCfd2c3uZvaoWQjz5vu+982b2Ql5EeJ/f2iUA1hZfTrh/enNE4tTTJSaQ4yHxHvn4IG16sLlrSz/VDOVXH/YPgfDrmAuZJkZPNEOCp5Zul5+beCRiRuZx6ZYfFktjkp7gugtBH5MFALU/qE9g7GAaBnUTIiOhZkFYPELKouEvF2rzN6POQwB6s2NG4LFPZ07RDKA5CBKDg73KeLtZInJkKCve0iQa9LGzLgD9VbnErN3CwaHtApHORXE9AFn+0XjaSOzKArBk0qDO/tKa1nwLyLnztJi6bnGjFfAvlcFMQ2h5kMjT8K4bxoCM8P9DQRSbFCtMbwA15U3dz3+jnc335eTaGMPI+06uRIuYj/lwI/WXIfuhrXGK1BEo9me8plfqlgSna9VyoMjVJjtk+U3yiW0XdNKb11A/dGz40krpHFJOVYF4Pv9gHu/PzVaGwtRQ4UpTmmiXNrcqgBcyGll5jNdjJruY4EmyifNLQtIssmPjwsYn8D4BOxOgLnfDeHnOtYVDbA9zahfTKsCiOQqfr22pJDr0QUUpjiliXJpc6MfSBMqDi1ZHYP6xJ5q5coLgCdjRAZgdQIZXrnoWAHSoZ/aCcd6TMe5R4eO6lx0Wj90rMdYQ9Ltdt13mzufIUYifUMfuKnFOcfTaMuO4JJuFwuzxbk58sI+sQIUudLqXPV8/zEaS6s7EjY2Y9p1pLxWXSw9MXFsMQroeaPZOcvCL6M9PaGxPCMW+Ij/FO1apfQmT/6/n/MX8KHG8NxlUVYAAAAASUVORK5CYII="
                         class="cfh-del-btn"/>
                     <span class="cfh-del-text">删除</span>
                 </div>
@@ -750,82 +750,82 @@
 <style scoped lang="less">
 
 
-.child-form-container {
-    width: 100%;
-
-    .child-form {
-        background: #F8F9FB;
-        border-radius: 4px;
-        margin-bottom: 24px;
-
-        .child-form-head {
-            position: relative;
-            height: 44px;
-            line-height: 44px;
-            text-align: left;
-            padding: 0 20px;
-            font-size: 14px;
-            color: #3A4566;
-            border-bottom: 1px solid #E7E8EB;
-            font-weight: 500;
-
-            .cfh-flod, .cfh-unflod {
-                position: absolute;
-                top: 16px;
-                right: 20px;
-                width: 12px;
-                height: 6px;
-                cursor: pointer;
-                user-select: none;
-            }
-
-            .cfh-del {
-                position: absolute;
-                top: 0;
-                right: 60px;
-                height: 40px;
-                line-height: 40px;
-                cursor: pointer;
-                user-select: none;
-
-                .cfh-del-btn {
-                    position: relative;
-                    height: 16px;
-                    width: 16px;
-                    margin-top: 12px;
-                    vertical-align: top;
-                }
-
-                .cfh-del-text {
-                    display: inline-block;
-                    position: relative;
-                    height: 40px;
-                    line-height: 40px;
-                    vertical-align: top;
-                    font-size: 14px;
-                    color: #949AAE;
-                    font-weight: 400;
-                }
-            }
-        }
-
-        .child-form-body {
-            padding: 0 20px;
-        }
-    }
-
-    .child-form-add-btn {
-        position: relative;
+    .child-form-container {
         width: 100%;
-        height: 40px;
-        line-height: 40px;
-        background: #FBFCFD;
-        border: 1px dashed #ABB3CC;
-        border-radius: 4px;
-        text-align: center;
-        font-size: 14px;
-        color: #12182A;
-        cursor: pointer;
+
+        .child-form {
+            background: #F8F9FB;
+            border-radius: 4px;
+            margin-bottom: 24px;
+
+            .child-form-head {
+                position: relative;
+                height: 44px;
+                line-height: 44px;
+                text-align: left;
+                padding: 0 20px;
+                font-size: 14px;
+                color: #3A4566;
+                border-bottom: 1px solid #E7E8EB;
+                font-weight: 500;
+
+                .cfh-flod, .cfh-unflod {
+                    position: absolute;
+                    top: 19px;
+                    right: 24px;
+                    width: 12px;
+                    height: 6px;
+                    cursor: pointer;
+                    user-select: none;
+                }
+
+                .cfh-del {
+                    position: absolute;
+                    top: 0;
+                    right: 55px;
+                    height: 44px;
+                    line-height: 44px;
+                    cursor: pointer;
+                    user-select: none;
+
+                    .cfh-del-btn {
+                        position: relative;
+                        height: 16px;
+                        width: 16px;
+                        margin-top: 14px;
+                        vertical-align: top;
+                    }
+
+                    .cfh-del-text {
+                        display: inline-block;
+                        position: relative;
+                        height: 44px;
+                        line-height: 44px;
+                        vertical-align: top;
+                        font-size: 14px;
+                        color: #949AAE;
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .child-form-body {
+                padding: 0 20px;
+            }
+        }
+
+        .child-form-add-btn {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            background: #FBFCFD;
+            border: 1px dashed #ABB3CC;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            color: #12182A;
+            cursor: pointer;
+        }
     }
-}
 </style>
