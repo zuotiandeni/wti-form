@@ -1092,7 +1092,6 @@
             padding-top: 10px;
             padding-bottom: 24px;
             font-size: 16px;
-            border-bottom: 1px solid #DDE0EA;
 
             // label 左边的红色竖线
             .block-line {
@@ -1145,6 +1144,7 @@
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
                 margin-bottom: 18px;
+                border-bottom: 1px solid #DDE0EA;
             }
 
             .block-title + .block-content {
