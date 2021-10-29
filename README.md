@@ -26,7 +26,9 @@ http://lovelovewall.com/wti_form_demo/home.html#/demo/base
 
 ![Github stars](https://img.shields.io/github/stars/qq20004604/wti-form.svg?label=Stars&color=success)
 
+```
 作者 QQ：20004604
 作者微信：qq20004604
 作者邮箱：20004604@qq.com
 吹牛皮的群：387017550
+```
