@@ -1,7 +1,7 @@
 <template>
     <!-- 普通输入框 -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-input-box form-item-box">
         <el-input v-model.trim="val"
                   :placeholder="getPlaceholder(item)"

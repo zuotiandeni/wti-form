@@ -1,7 +1,7 @@
 <template>
     <!-- 普通输入框 -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-input-box form-item-box">
         <el-radio-group v-model.trim="val"
                         :disabled="getDisabled"

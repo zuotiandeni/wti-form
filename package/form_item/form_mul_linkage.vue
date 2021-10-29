@@ -1,7 +1,7 @@
 <template>
     <!--  三级联动下拉框（通过数据字典获取选项）  -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-item-box">
         <el-row v-if="!getTextModel">
             <!-- 默认 3 级联动 -->

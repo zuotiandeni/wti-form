@@ -251,7 +251,7 @@
             },
 
             getClass () {
-                const c1 = `form-unqiue-${this.item.key}`;
+                const c1 = `form-unqiue-${this.item.key} ${this.getTextModel ? '' : 'wti-untext-box'}`;
                 const c2 = this.readonly ? 'is-readonly' : 'is-wr';
                 return {
                     [c1]: true,

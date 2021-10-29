@@ -1,6 +1,6 @@
 <template>
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-item-box">
         <el-select style="width:100%"
                    v-model="val"

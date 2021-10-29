@@ -1,7 +1,7 @@
 <template>
     <!--  字典下拉框（指通过数据字典获取选项）  -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-item-box">
         <el-select style="width:100%"
                    v-model="val"

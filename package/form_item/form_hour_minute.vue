@@ -1,7 +1,7 @@
 <template>
     <!-- 小时、分钟 输入框 -->
     <div :style="item.style||{}"
-         :class="`form-unqiue-${item.key}`"
+         :class="`form-unqiue-${item.key} ${getTextModel ? '' : 'wti-untext-box'}`"
          class="form-item-box">
         <el-time-picker v-model="val"
                         class="form-date-item"

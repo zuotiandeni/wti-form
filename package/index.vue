@@ -1082,6 +1082,10 @@
             border-color: #ABB3CC !important;
         }
 
+        /deep/ .wti-untext-box {
+            height: 36px !important;
+        }
+
         .block-title {
             position: relative;
             height: 50px;
@@ -1140,10 +1144,11 @@
                 padding: 20px 0 18px 24px;
                 border-top-left-radius: 8px;
                 border-top-right-radius: 8px;
+                margin-bottom: 18px;
             }
 
             .block-title + .block-content {
-                padding-top: 14px;
+                //padding-top: 14px;
             }
 
             .block-content {
