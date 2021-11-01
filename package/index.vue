@@ -145,6 +145,7 @@
                                                    :ref="rowItem.key"
                                                    :all-disabled="allDisabled"
                                                    :item="rowItem"
+                                                   :base-u-r-l="baseURL"
                                                    v-model.trim="formData[rowItem.key]"/>
 
                                         <TableReadonly v-if="rowItem.type === 'table-readonly'"
@@ -165,7 +166,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    // import axios from 'axios';
     import FormInput from './form_item/form_input';
     import FormTextarea from './form_item/form_textarea';
     import FormDictSelect from './form_item/form_dict_select';
@@ -188,6 +189,8 @@
 
     import ChildForm from './child_form';
     import FormMixin from './mixin';
+
+    import createAxios from './ajax';
 
     export default {
         name: 'WtiForm',
@@ -220,7 +223,23 @@
                 type: Boolean,
                 default: false,
             },
-            // 数据字典的配置
+            // 基础 url，一般是指 axios 用的 baseURL
+            // 由于组件并不能默认使用 axios 的 baseURL，所以如果有需要，这里要特殊设置
+            // 这个默认会默认应用到 字典接口 ，并且 props 属性的 enableOthers 默认为 true，所以也会应用到自动搜索下拉框 接口等
+            baseURL: {
+                type: String,
+                default: '',
+            },
+            // 是否启用将 baseURL 应用到 其他接口里（默认为 true，表示应用）
+            enableBaseURLForOthers: {
+                type: Boolean,
+                default: true
+            },
+            // 特殊 axios 配置。比如要配置 axios 配置的话，在这里使用即可
+            axiosOptions: {
+                type: Object,
+                default: () => ({})
+            }
         },
         data () {
             return {
@@ -248,10 +267,23 @@
                 scanType: 'normal', // normal 默认（大表单），single（表单只显示单个区块，上方显示所有区块的按钮组）
                 singleScanBlock: '', // 单个模式时，显示哪个表单
 
-                version: '1.0.0'
+                version: '1.1.0',
+
+                axios: null,
+                axiosSpecial: null
             };
         },
         created () {
+            this.axios = createAxios(Object.assign({
+                baseURL: this.baseURL
+            }, this.axiosOptions));
+            // 如果允许复用，那么这 2 个使用同一个 axios 实例
+            if (this.enableBaseURLForOthers) {
+                this.axiosSpecial = this.axios;
+            } else {
+                this.axiosSpecial = createAxios(this.axiosOptions);
+            }
+
             this.currentFileds = this.fields;
 
             this.initFormData();
@@ -300,7 +332,12 @@
                 // 会动态变化的数据（注意，来自 props【更上级组件】的数据，不能放这个里面，只能显式的通过 props 往下面传）
                 changeData: this.changeData,
                 formItemType: '',
-                childChangeData: {}
+                childChangeData: {},
+
+                baseURL: this.baseURL,
+                enableBaseURLForOthers: this.enableBaseURLForOthers,
+                getCommonAxios: this.getCommonAxios,
+                getSpecialAxios: this.getSpecialAxios
             };
         },
         watch: {
@@ -325,6 +362,13 @@
             }
         },
         methods: {
+            getCommonAxios () {
+                return this.axios;
+            },
+            getSpecialAxios () {
+                return this.axiosSpecial;
+            },
+
             // 监听值更新
             valueUpdateEvent (params) {
                 this.$emit('updateValue', params);
@@ -749,7 +793,7 @@
                     payload = parentCodeList;
                 }
                 // console.log('WtiForm 拉取动态字典');
-                axios.post(this.dynamicSelectOption.dictUrl, payload).then(res => {
+                this.axios.post(`${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
                     // 兼容性处理
                     let data;
                     if (res.request && res.headers) {

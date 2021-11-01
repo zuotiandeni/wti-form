@@ -24,7 +24,6 @@
 
 <script>
     import FormMixin from './mixin';
-    import axios from 'axios';
 
     // 多级联动下拉框
     export default {
@@ -196,7 +195,7 @@
                 this.$set(this.dynamicDict, parentCode, []);
                 // console.log('nul linkage load dict');
                 // 否则，根据当前的值，去请求数据字典
-                axios.post(this.dynamicSelectOption.dictUrl, payload).then(res => {
+                this.getSpecialAxios().post(this.dynamicSelectOption.dictUrl, payload).then(res => {
                     // 兼容性处理
                     let data;
                     if (res.request && res.headers) {

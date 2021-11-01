@@ -130,7 +130,7 @@
         <div class="child-form-add-btn"
              v-if="!textModel"
              @click="()=>allDisabled ? '' : addChildForm()">
-            ＋ {{ item.headerLabel }}
+            {{ getAddBtnLabel }}
         </div>
     </div>
 </template>
@@ -151,7 +151,6 @@
     import FormRateInput from './form_item/form_rate_input';
     import FormMulLinkage from './form_item/form_mul_linkage';
     import FormNormalNumberInput from './form_item/form_normal_number_input';
-    import axios from 'axios';
     import FormMulSelectNormal from './form_item/form_mul_select_normal';
 
     export default {
@@ -177,7 +176,16 @@
                 }
             }
         },
-        inject: [ 'changeData', 'statusChangeFn', 'dynamicDict', 'dynamicSelectOption' ],
+        inject: [
+            'changeData',
+            'statusChangeFn',
+            'dynamicDict',
+            'dynamicSelectOption',
+            'baseURL',
+            'enableBaseURLForOthers',
+            'getCommonAxios',
+            'getSpecialAxios',
+        ],
         watch: {
             // 这个是只有当 子表单 的值变化时才会触发的
             // 以下两个示例都会触发。注意，其他情况下不会触发
@@ -312,8 +320,7 @@
                 } else {
                     payload = parentCodeList;
                 }
-                // console.log('WtiForm 拉取动态字典');
-                axios.post(this.dynamicSelectOption.dictUrl, payload).then(res => {
+                this.getCommonAxios().post(`${this.baseURL}${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
                     // 兼容性处理
                     let data;
                     // 这里判断是不是 axios 的默认返回数据（未经过请求拦截器处理的）
@@ -725,6 +732,14 @@
                     item: rowItem,
                     allDisabled: this.allDisabled,
                 };
+            },
+
+            getAddBtnLabel () {
+                if (this.item.addBtnLabel) {
+                    return this.item.addBtnLabel;
+                } else {
+                    return `＋ ${this.item.headerLabel}`;
+                }
             }
         },
         components: {

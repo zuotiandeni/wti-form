@@ -21,7 +21,6 @@
 
 <script>
     import FormMixin from './mixin';
-    import axios from 'axios';
 
     export default {
         name: 'FormAutoComplete',
@@ -43,7 +42,7 @@
                     });
                 }
 
-                axios.post(this.item.searchUrl, payload).then(res => {
+                this.getSpecialAxios().post(this.item.searchUrl, payload).then(res => {
                     const data = res;
                     if (data.code === 200) {
                         if (data.data) {
