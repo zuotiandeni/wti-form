@@ -130,7 +130,7 @@
         <div class="child-form-add-btn"
              v-if="!textModel"
              @click="()=>allDisabled ? '' : addChildForm()">
-            {{ getAddBtnLabel }}
+            {{ addBtnLabel }}
         </div>
     </div>
 </template>
@@ -173,6 +173,14 @@
                 },
                 set (v) {
                     this.$emit('input', v);
+                }
+            },
+
+            addBtnLabel () {
+                if (this.item.addBtnLabel) {
+                    return this.item.addBtnLabel;
+                } else {
+                    return `＋ ${this.item.headerLabel}`;
                 }
             }
         },
@@ -732,14 +740,6 @@
                     item: rowItem,
                     allDisabled: this.allDisabled,
                 };
-            },
-
-            getAddBtnLabel () {
-                if (this.item.addBtnLabel) {
-                    return this.item.addBtnLabel;
-                } else {
-                    return `＋ ${this.item.headerLabel}`;
-                }
             }
         },
         components: {
