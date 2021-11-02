@@ -43,7 +43,13 @@
                 }
 
                 this.getSpecialAxios().post(this.item.searchUrl, payload).then(res => {
-                    const data = res;
+                    // 兼容性处理
+                    let data;
+                    if (res.request && res.headers) {
+                        data = res.data;
+                    } else {
+                        data = res;
+                    }
                     if (data.code === 200) {
                         if (data.data) {
                             const d = data.data.map(item => {

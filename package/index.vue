@@ -95,7 +95,6 @@
                                                        :ref="rowItem.key"
                                                        :item="rowItem"
                                                        v-model="formData[rowItem.key]"/>
-
                                         <el-form-item v-else
                                                       :style="rowItem.style"
                                                       :class="rowItem.class"
@@ -793,7 +792,7 @@
                     payload = parentCodeList;
                 }
                 // console.log('WtiForm 拉取动态字典');
-                this.axios.post(`${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
+                this.getCommonAxios().post(`${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
                     // 兼容性处理
                     let data;
                     if (res.request && res.headers) {

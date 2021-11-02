@@ -2,21 +2,21 @@
 
 低代码表单组件
 
-2021.11.01：1.1.0 发布
+2021.11.02：1.1.2 发布
 
-> 1.1.0
+> 1.1.2
 
-1. wti-form，不管是直接 copy 代码下来，还是通过 npm 引入，可以使用同一套配置啦；
-2. 支持添加 baseURL（默认为空），方便需要 axios 的 baseURL ，需要实现本地转发或者线上转发的人；
-3. 支持自定义 axios 配置（通过 props 的 axiosOptions 传入）；
-4. 特别声明：组件内的 axios，和工程的 axios，默认情况下并不会使用同一套配置。如果需要使用同样的配置，请手动设置；
-5. 允许自定义子表单新增按钮的文字内容了（使用 addBtnLabel 属性）；
+1. 新版 axios 策略下，修复【输入搜索下拉框】获取返回结果错误的问题；
+2. 优化了各组件显示判断顺序；
 
 
 文档示例地址：
 
 http://lovelovewall.com/wti_form_demo/home.html#/demo/base
 
+Github：
+
+<a href='https://github.com/qq20004604'>https://github.com/qq20004604</a>
 
 <p>
   <a href="https://www.npmjs.org/package/wti-form">
