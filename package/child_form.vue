@@ -108,15 +108,15 @@
                                             <FormMulLinkage v-if="rowItem.type==='mul-linkage'"
                                                             v-bind="getProps(rowItem)"
                                                             :random-id="childField.randomId"
-                                                            v-model.trim="val[rowItem.key]"/>
+                                                            v-model.trim="val[index][rowItem.key]"/>
                                             <FormNormalNumberInput v-if="rowItem.type==='normal-number'"
                                                                    v-bind="getProps(rowItem)"
                                                                    :random-id="childField.randomId"
-                                                                   v-model.trim="val[rowItem.key]"/>
+                                                                   v-model.trim="val[index][rowItem.key]"/>
                                             <FormMulSelectNormal v-if="rowItem.type==='mul-select-normal'"
                                                                  v-bind="getProps(rowItem)"
                                                                  :random-id="childField.randomId"
-                                                                 v-model.trim="val[rowItem.key]"/>
+                                                                 v-model.trim="val[index][rowItem.key]"/>
                                         </el-form-item>
                                     </el-col>
                                 </div>
@@ -387,7 +387,12 @@
                     if (childFormData && child.key in childFormData) {
                         obj[child.key] = childFormData[child.key];
                     } else {
-                        obj[child.key] = child.defaultValue || '';
+                        // 2.2 该要素没有默认值，使用通用默认值
+                        if (child.type === 'mul-linkage' || child.type === 'mul-select-normal') {
+                            obj[child.key] = child.defaultValue || [];
+                        } else {
+                            obj[child.key] = child.defaultValue || '';
+                        }
                     }
                     if (child.disableDefault) {
                         defaultDisableList.push(child.key);
@@ -396,6 +401,7 @@
                         defaultHiddenList.push(child.key);
                     }
                 });
+                console.log(obj);
                 if (!notAddValue) {
                     this.val.push(obj);
                 }

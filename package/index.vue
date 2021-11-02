@@ -266,8 +266,6 @@
                 scanType: 'normal', // normal 默认（大表单），single（表单只显示单个区块，上方显示所有区块的按钮组）
                 singleScanBlock: '', // 单个模式时，显示哪个表单
 
-                version: '1.1.0',
-
                 axios: null,
                 axiosSpecial: null
             };
@@ -402,6 +400,7 @@
                                     // 2.2 该要素没有默认值，使用通用默认值
                                     if (field.type === 'child-form' ||
                                         field.type === 'table-readonly' ||
+                                        field.type === 'mul-linkage' ||
                                         field.type === 'mul-select-normal') {
                                         this.$set(this.formData, field.key, []);
                                     } else if (field.type === 'area-select') {
