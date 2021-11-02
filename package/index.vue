@@ -83,7 +83,20 @@
                                     <el-col :span="getColSize(rowItem)"
                                             :key="rowItem.key"
                                             :style="rowItem.style || {}">
-                                        <el-form-item v-if="rowItem.type!=='child-form'"
+                                        <ChildForm v-if="rowItem.type === 'child-form'"
+                                                   :text-model="textModel"
+                                                   :ref="rowItem.key"
+                                                   :all-disabled="allDisabled"
+                                                   :item="rowItem"
+                                                   :base-u-r-l="baseURL"
+                                                   v-model.trim="formData[rowItem.key]"/>
+
+                                        <TableReadonly v-else-if="rowItem.type === 'table-readonly'"
+                                                       :ref="rowItem.key"
+                                                       :item="rowItem"
+                                                       v-model="formData[rowItem.key]"/>
+
+                                        <el-form-item v-else
                                                       :style="rowItem.style"
                                                       :class="rowItem.class"
                                                       :rules="rowItem.rules"
@@ -139,19 +152,6 @@
                                                                  v-bind="getProps(rowItem)"
                                                                  v-model.trim="formData[rowItem.key]"/>
                                         </el-form-item>
-
-                                        <ChildForm v-if="rowItem.type === 'child-form'"
-                                                   :text-model="textModel"
-                                                   :ref="rowItem.key"
-                                                   :all-disabled="allDisabled"
-                                                   :item="rowItem"
-                                                   :base-u-r-l="baseURL"
-                                                   v-model.trim="formData[rowItem.key]"/>
-
-                                        <TableReadonly v-if="rowItem.type === 'table-readonly'"
-                                                       :ref="rowItem.key"
-                                                       :item="rowItem"
-                                                       v-model="formData[rowItem.key]"/>
                                     </el-col>
                                 </div>
                             </template>
@@ -1090,7 +1090,7 @@
         }
 
         /deep/ .form-item-box {
-            height: 36px;
+            min-height: 36px;
             line-height: 36px;
 
             .el-radio-group {
