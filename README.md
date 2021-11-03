@@ -9,14 +9,14 @@
 1. 考虑到总有一些小可爱，他们的产品经理给他们提的奇奇怪怪需求，导致现有组件无法满足，因此推出插槽功能，撒花~
 2. 插槽文档地址：http://lovelovewall.com/wti_form_demo/home.html#/advance/Slot
 
+Github：（老铁，来个 star）
+
+<a href='https://github.com/qq20004604'>https://github.com/qq20004604</a>
+
 
 文档示例地址：
 
 http://lovelovewall.com/wti_form_demo/home.html#/demo/base
-
-Github：
-
-<a href='https://github.com/qq20004604'>https://github.com/qq20004604</a>
 
 <p>
   <a href="https://www.npmjs.org/package/wti-form">
