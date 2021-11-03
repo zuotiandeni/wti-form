@@ -95,6 +95,17 @@
                                                        :ref="rowItem.key"
                                                        :item="rowItem"
                                                        v-model="formData[rowItem.key]"/>
+                                        <div v-else-if="rowItem.type==='slot-single'">
+                                            <slot :name="rowItem.name"></slot>
+                                        </div>
+                                        <el-form-item v-else-if="rowItem.type==='slot'"
+                                                      :style="rowItem.style"
+                                                      :class="rowItem.class"
+                                                      :label="getFormItemLabel(rowItem)">
+                                            <!-- eslint-disable-next-line -->
+                                            <div v-if="rowItem.htmlLabel" slot="label" v-html="rowItem.htmlLabel"></div>
+                                            <slot :name="rowItem.name"></slot>
+                                        </el-form-item>
                                         <el-form-item v-else
                                                       :style="rowItem.style"
                                                       :class="rowItem.class"
@@ -380,7 +391,12 @@
                     if (fields.children && fields.children instanceof Array) {
                         fields.children.forEach(field => {
                             // 处理初始值的问题
-                            // 1. 如果该值在 data 里，则直接取 data 里的值（面对场景：数值回显）
+                            // 1. 如果是插槽，那么直接忽略这个
+                            if (field.type === 'slot') {
+                                return;
+                            }
+
+                            // 2. 如果该值在 data 里，则直接取 data 里的值（面对场景：数值回显）
                             if (field.key in this.data) {
                                 this.$set(this.formData, field.key, this.data[field.key]);
                                 // 赋值默认值的时候，触发事件通知上级
@@ -388,8 +404,8 @@
                                     [field.key]: this.data[field.key],
                                 });
                             } else {
-                                // 2. 不需要回显的场景下
-                                // 2.1 如果该要素有默认值，则使用默认值
+                                // 3. 不需要回显的场景下
+                                // 3.1 如果该要素有默认值，则使用默认值
                                 if (field.defaultValue) {
                                     this.$set(this.formData, field.key, field.defaultValue);
                                     // 赋值默认值的时候，触发事件通知上级
@@ -397,7 +413,7 @@
                                         [field.key]: field.defaultValue,
                                     });
                                 } else {
-                                    // 2.2 该要素没有默认值，使用通用默认值
+                                    // 3.2 该要素没有默认值，使用通用默认值
                                     if (field.type === 'child-form' ||
                                         field.type === 'table-readonly' ||
                                         field.type === 'mul-linkage' ||

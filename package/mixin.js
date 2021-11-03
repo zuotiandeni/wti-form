@@ -71,7 +71,7 @@ export default {
 
         // 获取单个要素的列宽
         getColSize (item) {
-            if (item.type === 'child-form') {
+            if (item.type === 'child-form' || item.type === 'slot-single' || item.type === 'table-readonly') {
                 return 24;
             }
 

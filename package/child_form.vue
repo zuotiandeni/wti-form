@@ -401,7 +401,6 @@
                         defaultHiddenList.push(child.key);
                     }
                 });
-                console.log(obj);
                 if (!notAddValue) {
                     this.val.push(obj);
                 }
