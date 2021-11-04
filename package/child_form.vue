@@ -328,7 +328,7 @@
                 } else {
                     payload = parentCodeList;
                 }
-                this.getCommonAxios().post(`${this.baseURL}${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
+                this.getCommonAxios().post(`${this.dynamicSelectOption.dictUrl}`, payload).then(res => {
                     // 兼容性处理
                     let data;
                     // 这里判断是不是 axios 的默认返回数据（未经过请求拦截器处理的）
