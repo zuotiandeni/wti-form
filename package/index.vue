@@ -1225,6 +1225,7 @@
                 border-bottom: 0;
                 overflow: hidden;
                 border-radius: 8px;
+                margin-bottom: 0;
             }
         }
     }
