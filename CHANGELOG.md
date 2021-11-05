@@ -16,6 +16,10 @@
 
 ### 更新历史
 
+> 1.1.6
+
+1. 为了增强 axios 功能，因此提供一个函数 ``axiosCallback(axios, specialAxios)``，用于直接对 axios 实例进行操作
+
 > 1.1.5
 
 1. 修复了一个收起状态下，显示不正常的 bug；

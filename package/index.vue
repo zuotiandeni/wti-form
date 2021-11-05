@@ -249,6 +249,12 @@
             axiosOptions: {
                 type: Object,
                 default: () => ({})
+            },
+            // axios 实例在创建后，将其作为参数传给本函数，用于二次处理
+            axiosCallback: {
+                type: Function,
+                default: () => {
+                }
             }
         },
         data () {
@@ -291,6 +297,7 @@
             } else {
                 this.axiosSpecial = createAxios(this.axiosOptions);
             }
+            this.axiosCallback(this.axios, this.axiosSpecial);
 
             this.currentFileds = this.fields;
 
