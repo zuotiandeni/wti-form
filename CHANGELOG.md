@@ -16,6 +16,10 @@
 
 ### 更新历史
 
+> 1.1.7
+
+1. 增加对 IE 的兼容性；
+
 > 1.1.6
 
 1. 为了增强 axios 功能，因此提供一个函数 ``axiosCallback(axios, specialAxios)``，用于直接对 axios 实例进行操作
