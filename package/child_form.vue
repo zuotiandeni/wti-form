@@ -54,8 +54,14 @@
                                                       :style="rowItem.style"
                                                       :class="rowItem.class"
                                                       :rules="rowItem.rules"
-                                                      :label="getFormItemLabel(rowItem)"
                                                       :prop="rowItem.key">
+                                            <template slot="label">
+                                                <div class="wti-form-label">
+                                                    <span>{{ getFormItemLabel(rowItem) }}</span>
+                                                    <span class="wti-form-label-Colon"
+                                                          v-if="getFormItemLabelColon(item)">:</span>
+                                                </div>
+                                            </template>
                                             <FormInput v-if="rowItem.type==='input'"
                                                        v-bind="getProps(rowItem)"
                                                        :random-id="childField.randomId"
@@ -76,6 +82,14 @@
                                                             v-bind="getProps(rowItem)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
+                                            <FormDictCheckbox v-if="rowItem.type === 'dynamic-checkbox'"
+                                                              v-bind="getProps(rowItem)"
+                                                              :random-id="childField.randomId"
+                                                              v-model.trim="val[index][rowItem.key]"/>
+                                            <FormDynamicSelectNormal v-if="rowItem.type === 'dynamic-select-normal'"
+                                                                     v-bind="getProps(rowItem)"
+                                                                     :random-id="childField.randomId"
+                                                                     v-model.trim="val[index][rowItem.key]"/>
                                             <FormNormalSelect v-if="rowItem.type === 'normal-select'"
                                                               v-bind="getProps(rowItem)"
                                                               :random-id="childField.randomId"
@@ -117,6 +131,10 @@
                                                                  v-bind="getProps(rowItem)"
                                                                  :random-id="childField.randomId"
                                                                  v-model.trim="val[index][rowItem.key]"/>
+                                            <FormCheckbox v-if="rowItem.type==='checkbox'"
+                                                          v-bind="getProps(rowItem)"
+                                                          :random-id="childField.randomId"
+                                                          v-model.trim="val[index][rowItem.key]"/>
                                         </el-form-item>
                                     </el-col>
                                 </div>
@@ -152,6 +170,9 @@
     import FormMulLinkage from './form_item/form_mul_linkage';
     import FormNormalNumberInput from './form_item/form_normal_number_input';
     import FormMulSelectNormal from './form_item/form_mul_select_normal';
+    import FormCheckbox from './form_item/form_checkbox';
+    import FormDictCheckbox from './form_item/form_dict_checkbox';
+    import FormDynamicSelectNormal from './form_item/form_dict_select_normal';
 
     export default {
         name: 'ChildForm',
@@ -159,12 +180,12 @@
         props: {
             item: {
                 type: Object,
-                default: () => ({})
+                default: () => ({}),
             },
             value: {
                 type: Array,
-                default: () => ([])
-            }
+                default: () => ([]),
+            },
         },
         computed: {
             val: {
@@ -173,7 +194,7 @@
                 },
                 set (v) {
                     this.$emit('input', v);
-                }
+                },
             },
 
             addBtnLabel () {
@@ -182,7 +203,7 @@
                 } else {
                     return `＋ ${this.item.headerLabel}`;
                 }
-            }
+            },
         },
         inject: [
             'changeData',
@@ -217,7 +238,7 @@
                     // 不变化的情况下，不应该进行处理（push 和 splice 会是这种情况）
                     // 该种情况下，childFormFileds 由各自的行为进行处理
                 }
-            }
+            },
         },
         mounted () {
             if (this.value && this.value instanceof Array && this.value.length > 0) {
@@ -250,7 +271,7 @@
                     valueUpdateEvent: this.valueUpdateEvent,
                     // 设置为必填
                     setElementRequired: this.setElementRequired,
-                }
+                },
             };
         },
         provide () {
@@ -258,7 +279,7 @@
                 // 子组件收到这个变量后，将知道这个元素是子表单，
                 // 因此在部分逻辑上执行时，和默认表单逻辑不通
                 formItemType: 'childForm',
-                childChangeData: this.childChangeData
+                childChangeData: this.childChangeData,
             };
         },
         methods: {
@@ -278,7 +299,9 @@
                 this.childFormFileds.forEach(fields => {
                     if (fields && fields instanceof Array) {
                         fields.forEach(field => {
-                            if (field.type === 'dynamic-select' && field.parentKey) {
+                            if ((field.type === 'dynamic-select' ||
+                                field.type === 'dynamic-checkbox' ||
+                                field.type === 'dynamic-select-normal') && field.parentKey) {
                                 // 再做一次去重判断。如果该字典已经在里面了，再跳过这一个
                                 if (parentCodeList.indexOf(field.parentKey) === -1) {
                                     if (!this.dynamicDict[field.parentKey]) {
@@ -323,7 +346,7 @@
                 let payload = null;
                 if (this.dynamicSelectOption.queryKey) {
                     payload = {
-                        [this.dynamicSelectOption.queryKey]: parentCodeList
+                        [this.dynamicSelectOption.queryKey]: parentCodeList,
                     };
                 } else {
                     payload = parentCodeList;
@@ -354,7 +377,7 @@
                                 // 注：之所以是数组，是因为之前已经初始化过了（parentKey 为 Code）
                                 const pCode = item[this.dynamicSelectOption.parentKey];
                                 this.dynamicDict[pCode].push(
-                                    item
+                                    item,
                                 );
                             });
                         }
@@ -388,7 +411,7 @@
                         obj[child.key] = childFormData[child.key];
                     } else {
                         // 2.2 该要素没有默认值，使用通用默认值
-                        if (child.type === 'mul-linkage' || child.type === 'mul-select-normal') {
+                        if (child.type === 'mul-linkage' || child.type === 'mul-select-normal' || child.type === 'checkbox' || child.type === 'dynamic-checkbox' || filed.type === 'dynamic-select-normal') {
                             obj[child.key] = child.defaultValue || [];
                         } else {
                             obj[child.key] = child.defaultValue || '';
@@ -406,7 +429,6 @@
                 }
 
                 const formKey = this.item.key;
-
 
                 defaultDisableList.forEach(disableKey => {
                     const keyText = `${formKey}_${randomId}_${disableKey}`;
@@ -453,7 +475,7 @@
                             // 获取到他有多少 span，满 24 为一行
                             span: currentSpan,
                             rowItem: Object.assign({}, item, {
-                                randomId
+                                randomId,
                             }),
                         };
                         list.push([ obj ]);
@@ -468,7 +490,7 @@
                             // 获取到他有多少 span，满 24 为一行
                             span: currentSpan,
                             rowItem: Object.assign({}, item, {
-                                randomId
+                                randomId,
                             }),
                         };
                         list.push([ obj ]);
@@ -484,7 +506,7 @@
                             // 获取到他有多少 span，满 24 为一行
                             span: currentSpan,
                             rowItem: Object.assign({}, item, {
-                                randomId
+                                randomId,
                             }),
                         };
                         list.push([ obj ]);
@@ -505,7 +527,7 @@
                             // 获取到他有多少 span，满 24 为一行
                             span: currentSpan,
                             rowItem: Object.assign({}, item, {
-                                randomId
+                                randomId,
                             }),
                         };
                         list.push([ obj ]);
@@ -516,7 +538,7 @@
                             // 获取到他有多少 span，满 24 为一行
                             span: currentSpan,
                             rowItem: Object.assign({}, item, {
-                                randomId
+                                randomId,
                             }),
                         };
                         list[list.length - 1].push(obj);
@@ -569,9 +591,9 @@
                                         'message': '请输入',
                                         'trigger': [
                                             'blur',
-                                            'change'
-                                        ]
-                                    }
+                                            'change',
+                                        ],
+                                    },
                                 ]);
                                 return;
                             }
@@ -609,8 +631,8 @@
                                     'message': '请输入',
                                     'trigger': [
                                         'blur',
-                                        'change'
-                                    ]
+                                        'change',
+                                    ],
                                 });
                             }
                         });
@@ -648,10 +670,8 @@
             validateForm () {
                 return new Promise((resolve, reject) => {
                     Promise.all(
-                        this.$refs.form.map(form => this.validateItem(form))
-                    )
-                        .then(resolve)
-                        .catch(reject);
+                        this.$refs.form.map(form => this.validateItem(form)),
+                    ).then(resolve).catch(reject);
                 });
             },
 
@@ -745,7 +765,7 @@
                     item: rowItem,
                     allDisabled: this.allDisabled,
                 };
-            }
+            },
         },
         components: {
             FormInput,
@@ -763,89 +783,92 @@
             FormMulLinkage,
             FormNormalNumberInput,
             FormMulSelectNormal,
-        }
+            FormCheckbox,
+            FormDictCheckbox,
+            FormDynamicSelectNormal,
+        },
     };
 </script>
 
 <style scoped lang="less">
 
 
-    .child-form-container {
-        width: 100%;
+.child-form-container {
+    width: 100%;
 
-        .child-form {
-            background: #F8F9FB;
-            border-radius: 4px;
-            margin-bottom: 24px;
+    .child-form {
+        background: #F8F9FB;
+        border-radius: 4px;
+        margin-bottom: 24px;
 
-            .child-form-head {
-                position: relative;
+        .child-form-head {
+            position: relative;
+            height: 44px;
+            line-height: 44px;
+            text-align: left;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #3A4566;
+            border-bottom: 1px solid #E7E8EB;
+            font-weight: 500;
+
+            .cfh-flod, .cfh-unflod {
+                position: absolute;
+                top: 19px;
+                right: 24px;
+                width: 12px;
+                height: 6px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .cfh-del {
+                position: absolute;
+                top: 0;
+                right: 55px;
                 height: 44px;
                 line-height: 44px;
-                text-align: left;
-                padding: 0 20px;
-                font-size: 14px;
-                color: #3A4566;
-                border-bottom: 1px solid #E7E8EB;
-                font-weight: 500;
+                cursor: pointer;
+                user-select: none;
 
-                .cfh-flod, .cfh-unflod {
-                    position: absolute;
-                    top: 19px;
-                    right: 24px;
-                    width: 12px;
-                    height: 6px;
-                    cursor: pointer;
-                    user-select: none;
+                .cfh-del-btn {
+                    position: relative;
+                    height: 16px;
+                    width: 16px;
+                    margin-top: 14px;
+                    vertical-align: top;
                 }
 
-                .cfh-del {
-                    position: absolute;
-                    top: 0;
-                    right: 55px;
+                .cfh-del-text {
+                    display: inline-block;
+                    position: relative;
                     height: 44px;
                     line-height: 44px;
-                    cursor: pointer;
-                    user-select: none;
-
-                    .cfh-del-btn {
-                        position: relative;
-                        height: 16px;
-                        width: 16px;
-                        margin-top: 14px;
-                        vertical-align: top;
-                    }
-
-                    .cfh-del-text {
-                        display: inline-block;
-                        position: relative;
-                        height: 44px;
-                        line-height: 44px;
-                        vertical-align: top;
-                        font-size: 14px;
-                        color: #949AAE;
-                        font-weight: 400;
-                    }
+                    vertical-align: top;
+                    font-size: 14px;
+                    color: #949AAE;
+                    font-weight: 400;
                 }
             }
-
-            .child-form-body {
-                padding: 0 20px;
-            }
         }
 
-        .child-form-add-btn {
-            position: relative;
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            background: #FBFCFD;
-            border: 1px dashed #ABB3CC;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 14px;
-            color: #12182A;
-            cursor: pointer;
+        .child-form-body {
+            padding: 0 20px;
         }
     }
+
+    .child-form-add-btn {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        background: #FBFCFD;
+        border: 1px dashed #ABB3CC;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 14px;
+        color: #12182A;
+        cursor: pointer;
+    }
+}
 </style>
