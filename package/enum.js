@@ -22,6 +22,7 @@ const FormItemTypeText = {
     MulLinkage: '三级联动输入框',
     TextArea: '文本域输入框',
     MulSelectNormal: '普通多选下拉框',
+    Checkbox: '多选框',
 };
 
 const TypeList = [
@@ -99,6 +100,11 @@ const TypeList = [
         // 文本域输入框
         label: FormItemTypeText.MulSelectNormal,
         value: 'mul-select-normal',
+    },
+    {
+        // 多选框
+        label: FormItemTypeText.Checkbox,
+        value: 'checkbox',
     },
 ];
 
