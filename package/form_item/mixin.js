@@ -9,17 +9,17 @@ export default {
     props: {
         item: {
             type: Object,
-            default: () => ({}),
+            default: () => ({})
         },
         value: [ String, Number, Array ],
         allDisabled: {
             type: Boolean,
-            default: false,
+            default: false
         },
         randomId: {
             type: String,
-            default: '',
-        },
+            default: ''
+        }
     },
     inject: [
         'dynamicDict',
@@ -31,7 +31,7 @@ export default {
         'baseURL',
         'enableBaseURLForOthers',
         'getCommonAxios',
-        'getSpecialAxios',
+        'getSpecialAxios'
     ],
     computed: {
         // 扩展属性，直接将属性配置，传到表单组件内部（即 Element UI 上）
@@ -48,7 +48,6 @@ export default {
             delete obj.prepend;
             delete obj.append;
             delete obj.defaultValue;
-
             return obj;
         },
         // 获取禁用状态
@@ -85,13 +84,13 @@ export default {
                 // 只有非子表单的情况下，才会冒泡上去数据变更
                 if (this.formItemType !== 'childForm') {
                     this.statusChangeFn.valueUpdateEvent({
-                        [this.item.key]: v,
+                        [this.item.key]: v
                     });
                 } else {
                     // 如果是子表单的话，执行内置的变更
                     this.childChangeData.valueUpdateEvent();
                 }
-            },
+            }
         },
         // 是否采用文字模式
         getTextModel () {
@@ -102,7 +101,7 @@ export default {
                 return true;
             }
             return false;
-        },
+        }
     },
     methods: {
         // 获取输入框的 placeholder
@@ -166,8 +165,20 @@ export default {
                 this.item.valueLink.length > 0) {
                 // 遍历
                 this.item.valueLink.forEach(linkItem => {
+                    // 防止多选下拉框或其他多选的联动出现问题
+                    // 在这里还要判断它是不是checkbox类型
+                    // 为了扩展性，在配置项添加 multiSelectGanged 确保联动值和选中值为数组的情况下
+                    // let status = false;
+                    // if (Object.prototype.toString.call(v) === '[object Array]' && this.item.multiSelectGanged) {
+                    //     status = linkItem.value.every(item => {
+                    //         return v.indexOf(item) >= 0;
+                    //     })
+                    // }
+                    // 如果值是数组，并且
                     // 如果联动项的触发值不匹配，则跳过这一条
-                    if (v !== linkItem.value) {
+                    // 如果v不是数组，并且联动的值不等于v
+                    // 或者 v是数组，并且联动的值不存在于v
+                    if ((Object.prototype.toString.call(v) !== '[object Array]' && v !== linkItem.value) || (Object.prototype.toString.call(v) === '[object Array]' && v.indexOf(linkItem.value) === -1)) {
                         return;
                     }
                     // 此时匹配，判断 linkList 有没有
@@ -213,7 +224,7 @@ export default {
                 // 遍历
                 this.item.valueLink.forEach(linkItem => {
                     // 如果联动项的触发值不匹配，则跳过这一条
-                    if (v !== linkItem.value) {
+                    if ((Object.prototype.toString.call(v) !== '[object Array]' && v !== linkItem.value) || (Object.prototype.toString.call(v) === '[object Array]' && v.indexOf(linkItem.value) === -1)) {
                         return;
                     }
                     // 此时匹配，判断 linkList 有没有
@@ -230,9 +241,9 @@ export default {
                             if (triggerItem.enableLinkValue) {
                                 this.childChangeData.updateFormData(
                                     {
-                                        [linkKey]: triggerItem.linkValue,
+                                        [linkKey]: triggerItem.linkValue
                                     },
-                                    this.randomId,
+                                    this.randomId
                                 );
                             }
                             // 如果是子表单里的元素的话，采用三段匹配
@@ -244,7 +255,7 @@ export default {
                             if (triggerItem.enableLinkDisable) {
                                 this.statusChangeFn.setElementDisable(
                                     keyText,
-                                    triggerItem.linkDisable,
+                                    triggerItem.linkDisable
                                 );
                             }
                             // 如果联动隐藏/显示，则更新
@@ -258,7 +269,7 @@ export default {
                                 this.childChangeData.setElementRequired(
                                     linkKey,
                                     randomId,
-                                    triggerItem.linkRequired,
+                                    triggerItem.linkRequired
                                 );
                             }
                         });
@@ -266,7 +277,6 @@ export default {
                 });
             }
         },
-
 
         // 丢掉数字的小数点右边末尾的 0
         // 例如入参是 1.2000，出参是 1.2
@@ -315,6 +325,6 @@ export default {
                 // 无小数点
                 return n;
             }
-        },
-    },
+        }
+    }
 };

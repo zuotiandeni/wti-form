@@ -30,6 +30,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        textmodelColonShow: {
+            type: Boolean,
+            default: true,
+        },
         // 自定义表单每个要素的列。
         // 如果是 6 则为 一行 4 列，12 则为 1 行 2 列。
         // 优先级高于表单要素本身的设置
@@ -61,12 +65,26 @@ export default {
 
         // 获取 label
         getFormItemLabel (formItem) {
-            if (this.textModel &&
-                (this.labelPosition === 'left' || this.labelPosition ===
-                    'right')) {
-                return formItem.label + '：';
-            }
             return formItem.label;
+        },
+
+        getFormItemLabelColon (formItem) {
+            // 如果这一项设置了 textmodelColonShow 为 true
+            if (formItem.textModelColonVisible) {
+                return true;
+            // 如果这一项没设置 textModelColonVisible 则走总的配置
+            }else if(formItem.textModelColonVisible===undefined){
+                if (this.textModel &&
+                    (this.labelPosition === 'left' || this.labelPosition ===
+                        'right') && this.textModelColonVisible) {
+                    return true;
+                }else{
+                    return false;
+                }
+            // 否则代表 textModelColonVisible 设置为 false
+            }else{
+                return false;
+            }
         },
 
         // 获取单个要素的列宽
