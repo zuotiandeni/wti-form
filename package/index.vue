@@ -140,7 +140,7 @@
                                             <FormDictSelect v-if="rowItem.type === 'dynamic-select'"
                                                             v-bind="getProps(rowItem)"
                                                             v-model.trim="formData[rowItem.key]"/>
-                                            <FormDynamicSelectNormal v-if="rowItem.type === 'dynamic-select-normal'"
+                                            <FormDynamicSelectMultiple v-if="rowItem.type === 'dynamic-select-normal' || rowItem.type === 'dynamic-select-multiple'"
                                                                      v-bind="getProps(rowItem)"
                                                                      v-model.trim="formData[rowItem.key]"/>
                                             <FormDictCheckbox v-if="rowItem.type === 'dynamic-checkbox'"
@@ -216,7 +216,7 @@
     import FormMulLinkage from './form_item/form_mul_linkage';
     import FormNormalNumberInput from './form_item/form_normal_number_input';
     import FormMulSelectNormal from './form_item/form_mul_select_normal';
-    import FormDynamicSelectNormal from './form_item/form_dict_select_normal';
+    import FormDynamicSelectMultiple from './form_item/form_dict_select_multiple';
     import FormCheckbox from './form_item/form_checkbox';
 
     import TableReadonly from './form_item/table_readonly';
@@ -450,8 +450,9 @@
                                         // 添加CheckBox的默认值及数据类型
                                         field.type === 'checkbox' ||
                                         field.type === 'dynamic-checkbox' ||
+                                        field.type === 'mul-select-normal' ||
                                         field.type === 'dynamic-select-normal' ||
-                                        field.type === 'mul-select-normal') {
+                                        field.type === 'dynamic-select-multiple') {
                                         this.$set(this.formData, field.key, []);
                                     } else if (field.type === 'area-select') {
                                         this.$set(this.formData, field.key, [ '', '', '' ]);
@@ -790,7 +791,8 @@
                         fields.children.forEach(field => {
                             if ((field.type === 'dynamic-select' ||
                                 field.type === 'dynamic-checkbox' ||
-                                field.type === 'dynamic-select-normal') && field.parentKey) {
+                                field.type === 'dynamic-select-normal' ||
+                                field.type === 'dynamic-select-multiple') && field.parentKey) {
                                 // 再做一次去重判断。如果该字典已经在里面了，再跳过这一个
                                 if (parentCodeList.indexOf(field.parentKey) === -1) {
                                     if (!(this.dynamicDict[field.parentKey] && this.dynamicDict[field.parentKey].length !== 0)) {
@@ -1093,7 +1095,7 @@
             FormMulSelectNormal,
             FormCheckbox,
             FormDictCheckbox,
-            FormDynamicSelectNormal,
+            FormDynamicSelectMultiple,
 
             TableReadonly,
             ChildForm,

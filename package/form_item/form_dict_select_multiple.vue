@@ -23,7 +23,7 @@
     import FormMixin from './mixin';
 
     export default {
-        name: 'FormDynamicSelectNormal',
+        name: 'FormDynamicSelectMultiple',
         mixins: [ FormMixin ],
         computed: {
             textModelValue () {
