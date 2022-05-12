@@ -72,17 +72,17 @@ export default {
             // 如果这一项设置了 textmodelColonShow 为 true
             if (formItem.textModelColonVisible) {
                 return true;
-            // 如果这一项没设置 textModelColonVisible 则走总的配置
-            }else if(formItem.textModelColonVisible===undefined){
+                // 如果这一项没设置 textModelColonVisible 则走总的配置
+            } else if (formItem.textModelColonVisible === undefined) {
                 if (this.textModel &&
                     (this.labelPosition === 'left' || this.labelPosition ===
                         'right') && this.textModelColonVisible) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
-            // 否则代表 textModelColonVisible 设置为 false
-            }else{
+                // 否则代表 textModelColonVisible 设置为 false
+            } else {
                 return false;
             }
         },
