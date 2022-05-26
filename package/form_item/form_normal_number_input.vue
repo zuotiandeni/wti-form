@@ -15,7 +15,7 @@
             <template slot="prepend" v-if="prepend">{{ prepend }}</template>
             <template slot="append" v-if="append">{{ append }}</template>
         </el-input>
-        <div v-else :style="item.textStyle||{}" class="form-input-text">
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">
             <span class="prepend-msg" v-if="prepend">{{ prepend }}</span>
             <span class="text">{{ val || '-' }}</span>
             <span class="append-msg" v-if="append">{{ append }}</span>

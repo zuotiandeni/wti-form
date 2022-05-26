@@ -13,6 +13,7 @@
                            :disabled="getDisabled">
                     <el-option v-for="items in dynamicDict[item.firstParentKey || '10020']"
                                :key="items[dynamicSelectOption.value]"
+                               :disabled="items[dynamicSelectOption.disabled]"
                                :label="items[dynamicSelectOption.label]"
                                :value="items[dynamicSelectOption.value]"/>
                 </el-select>
@@ -41,7 +42,7 @@
                 </el-select>
             </el-col>
         </el-row>
-        <div v-else :style="item.textStyle || {}" class="form-input-text">
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle || {}" class="form-input-text">
             {{ areaText }}
         </div>
     </div>

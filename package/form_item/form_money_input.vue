@@ -26,7 +26,7 @@
                 <template slot="append">{{ append }}</template>
             </el-input>
         </template>
-        <div v-else :style="item.textStyle||{}" class="form-input-text">
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">
             {{ dealInputValue || '-' }}
             {{ append }}
         </div>
