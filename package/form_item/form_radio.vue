@@ -12,7 +12,7 @@
                         v-if="!getTextModel">
             <el-radio v-for="opt in item.options" :key="opt.value" :label="opt.value">{{ opt.label }}</el-radio>
         </el-radio-group>
-        <div v-else :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
     </div>
 </template>
 

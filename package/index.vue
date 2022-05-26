@@ -299,6 +299,8 @@
                     // 隐藏的要素，不进行校验。提交的时候，也要过滤掉
                     hiddenKeyList: [],
                     textModel: this.textModel,
+                    // 要高亮的内容
+                    highLightList: this.highLightList
                 },
 
                 foldBlockList: [], // 收起的区块（放在这个里面，该区块就只显示区块标题，不显示内容）
@@ -969,7 +971,11 @@
                             fn(false, data);
                         }
                     } else {
-                        const validateList = childFormKeyList.map(key => {
+                        // 父表单 联动 子表单的显示隐藏
+                        // 需要确保实例不为undefined
+                        const validateList = childFormKeyList.filter(key => {
+                            return !this.changeData.hiddenKeyList.includes(key);
+                        }).map(key => {
                             return this.$refs[key][0].validateForm();
                         });
                         Promise.all(validateList).then(() => {

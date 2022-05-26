@@ -10,10 +10,11 @@
                    v-if="!getTextModel">
             <el-option v-for="option in item.options"
                        :key="option.value"
+                       :disabled="option.disabled"
                        :label="option.label"
                        :value="option.value"/>
         </el-select>
-        <div v-else :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
     </div>
 </template>
 

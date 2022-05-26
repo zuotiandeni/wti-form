@@ -7,6 +7,16 @@
  */
 export default {
     props: {
+        // 第几个子表单（下标）
+        childFormIndex: {
+            type: Number,
+            default: -1
+        },
+        // 父key
+        parentKey: {
+            type: String,
+            default: ''
+        },
         item: {
             type: Object,
             default: () => ({})
@@ -104,6 +114,52 @@ export default {
         }
     },
     methods: {
+        // 整合添加类名--用于扩展多类名
+        exposeSpecificClass (parentKey, childFormIndex, key) {
+            return {
+                'wti-form-high-light-class': this.isHighLight(parentKey, childFormIndex, key)
+            };
+        },
+        // // 获取用户自定义的类名，好像没什么用，因为每个表单都有对应了name的class
+        // getUserOfferedClassName (pKey='', cIndex, key) {
+        //     this.changeData.highLightList.forEach(item => {
+        //         const {parentFormKey, childFormIndex, highLightKey, specificClass} = item;
+        //         if (parentFormKey === pKey) {
+        //             if (parentFormKey === '') {
+        //                 // 父表单
+        //                 if (key === highLightKey) {
+        //                     return specificClass || false
+        //                 }
+        //             } else {
+        //                 // 子表单
+        //                 if (cIndex === childFormIndex && key === highLightKey) {
+        //                     return specificClass || false
+        //                 }
+        //             }
+        //         }
+        //     });
+        // }
+        // 获取高亮状态的函数
+        isHighLight (pKey='', cIndex, key) {
+            let isHighLight = false;
+            this.changeData.highLightList.forEach(item => {
+                const {parentFormKey, childFormIndex, highLightKey} = item;
+                if (parentFormKey === pKey) {
+                    if (parentFormKey === '') {
+                        // 父表单
+                        if (key === highLightKey) {
+                            isHighLight = true;
+                        }
+                    } else {
+                        // 子表单
+                        if (cIndex === childFormIndex && key === highLightKey) {
+                            isHighLight = true;
+                        }
+                    }
+                }
+            });
+            return isHighLight;
+        },
         // 获取输入框的 placeholder
         getPlaceholder (formItem) {
             // todo 这里可能还要加一个全部 disable 的判断

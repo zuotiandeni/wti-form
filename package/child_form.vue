@@ -63,77 +63,77 @@
                                                 </div>
                                             </template>
                                             <FormInput v-if="rowItem.type==='input'"
-                                                       v-bind="getProps(rowItem)"
+                                                       v-bind="getProps(rowItem,index)"
                                                        :random-id="childField.randomId"
                                                        v-model.trim="val[index][rowItem.key]"/>
                                             <FormDate v-if="rowItem.type==='date-input'"
-                                                      v-bind="getProps(rowItem)"
+                                                      v-bind="getProps(rowItem,index)"
                                                       :random-id="childField.randomId"
                                                       v-model.trim="val[index][rowItem.key]"/>
                                             <FormHourMinute v-if="rowItem.type==='hour-minute-input'"
-                                                            v-bind="getProps(rowItem)"
+                                                            v-bind="getProps(rowItem,index)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
                                             <FormDateRange v-if="rowItem.type==='date-range-input'"
-                                                           v-bind="getProps(rowItem)"
+                                                           v-bind="getProps(rowItem,index)"
                                                            :random-id="childField.randomId"
                                                            v-model.trim="val[index][rowItem.key]"/>
                                             <FormDictSelect v-if="rowItem.type === 'dynamic-select'"
-                                                            v-bind="getProps(rowItem)"
+                                                            v-bind="getProps(rowItem,index)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
                                             <FormDictCheckbox v-if="rowItem.type === 'dynamic-checkbox'"
-                                                              v-bind="getProps(rowItem)"
+                                                              v-bind="getProps(rowItem,index)"
                                                               :random-id="childField.randomId"
                                                               v-model.trim="val[index][rowItem.key]"/>
                                             <FormDynamicSelectMultiple
                                                 v-if="rowItem.type === 'dynamic-select-normal' || rowItem.type === 'dynamic-select-multiple'"
-                                                v-bind="getProps(rowItem)"
+                                                v-bind="getProps(rowItem,index)"
                                                 :random-id="childField.randomId"
                                                 v-model.trim="val[index][rowItem.key]"/>
                                             <FormNormalSelect v-if="rowItem.type === 'normal-select'"
-                                                              v-bind="getProps(rowItem)"
+                                                              v-bind="getProps(rowItem,index)"
                                                               :random-id="childField.randomId"
                                                               v-model.trim="val[index][rowItem.key]"/>
                                             <FormNumberInput v-if="rowItem.type === 'number-input'"
-                                                             v-bind="getProps(rowItem)"
+                                                             v-bind="getProps(rowItem,index)"
                                                              :random-id="childField.randomId"
                                                              v-model.trim="val[index][rowItem.key]"/>
                                             <!-- 动态下拉框，入参是父 key，根据父 key 自动加载列表内容 -->
                                             <FormAutoComplete v-if="rowItem.type === 'auto-complete-input'"
-                                                              v-bind="getProps(rowItem)"
+                                                              v-bind="getProps(rowItem,index)"
                                                               :random-id="childField.randomId"
                                                               v-model.trim="val[index][rowItem.key]"/>
                                             <FormRadio v-if="rowItem.type === 'radio'"
-                                                       v-bind="getProps(rowItem)"
+                                                       v-bind="getProps(rowItem,index)"
                                                        :random-id="childField.randomId"
                                                        v-model.trim="val[index][rowItem.key]"/>
                                             <FormTextarea v-if="rowItem.type==='textarea'"
-                                                          v-bind="getProps(rowItem)"
+                                                          v-bind="getProps(rowItem,index)"
                                                           :random-id="childField.randomId"
                                                           v-model="val[index][rowItem.key]"/>
                                             <FormMoneyInput v-if="rowItem.type==='money-input'"
-                                                            v-bind="getProps(rowItem)"
+                                                            v-bind="getProps(rowItem,index)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
                                             <FormRateInput v-if="rowItem.type==='rate-input'"
-                                                           v-bind="getProps(rowItem)"
+                                                           v-bind="getProps(rowItem,index)"
                                                            :random-id="childField.randomId"
                                                            v-model.trim="val[index][rowItem.key]"/>
                                             <FormMulLinkage v-if="rowItem.type==='mul-linkage'"
-                                                            v-bind="getProps(rowItem)"
+                                                            v-bind="getProps(rowItem,index)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
                                             <FormNormalNumberInput v-if="rowItem.type==='normal-number'"
-                                                                   v-bind="getProps(rowItem)"
+                                                                   v-bind="getProps(rowItem,index)"
                                                                    :random-id="childField.randomId"
                                                                    v-model.trim="val[index][rowItem.key]"/>
                                             <FormMulSelectNormal v-if="rowItem.type==='mul-select-normal'"
-                                                                 v-bind="getProps(rowItem)"
+                                                                 v-bind="getProps(rowItem,index)"
                                                                  :random-id="childField.randomId"
                                                                  v-model.trim="val[index][rowItem.key]"/>
                                             <FormCheckbox v-if="rowItem.type==='checkbox'"
-                                                          v-bind="getProps(rowItem)"
+                                                          v-bind="getProps(rowItem,index)"
                                                           :random-id="childField.randomId"
                                                           v-model.trim="val[index][rowItem.key]"/>
                                         </el-form-item>
@@ -768,8 +768,13 @@
                 });
             },
 
-            getProps (rowItem) {
+            getProps (rowItem, index) {
+                // parentKey 父表单的key
+                // childFormIndex 子表单的下标
+                // rowItem.key  真实要高亮的key
                 return {
+                    childFormIndex: index,
+                    parentKey: this.item.key,
                     item: rowItem,
                     allDisabled: this.allDisabled,
                 };
