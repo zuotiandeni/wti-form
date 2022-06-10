@@ -22,7 +22,7 @@ export default {
         // 需要高亮的数据
         highLightList: {
             type: Array,
-            default:()=>[]
+            default: () => []
         },
         // 是否给表单显示border 外框，包含区块外侧有一个 boder，以及区块标题的灰色背景
         borderForm: {

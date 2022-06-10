@@ -222,7 +222,6 @@
             // WtiForm.$set(WtiForm.formData, 'key',[{projectName:'12'}]);
             // WtiForm.$set(WtiForm.formData.testInput, '0',{projectName:'12'});
             value (oldVal, newVal) {
-                // console.log('oldVal, newVal', oldVal === newVal);
                 // 这里的逻辑存在比较难处理的情况：
                 // 1. 预期：当初始化，value 为空数组或者不存在的时候，这里可以自动生成一个新行
                 // 2. 预期：当编辑模式下，这里的值是后续加载的，期望 fields 可以和 value 进行同步（需要重置）
@@ -743,12 +742,145 @@
 
                 this.childFormFileds = [];
                 // 这里的目的是为了生成 fields
-                this.value.forEach(() => {
-                    const field = this.deepCopy(childrenForm);
+                this.value.forEach((_, index) => {
+                    const childField = this.deepCopy(childrenForm);
                     // 给每个 field 添加一个随机 id
                     const randomId = (Math.random() * 100000000).toFixed(0);
-                    field.randomId = randomId;
-                    this.childFormFileds.push(field);
+                    childField.randomId = randomId;
+
+                    // data被赋值时，会触发本函数。所以这里要处理一下根据初始数值联动的问题
+                    childField.forEach(formItem => {
+                        if (formItem.valueLink && formItem.valueLink.length && formItem.valueLink.length > 0) {
+                            const {key} = formItem;
+                            const v = this.value[index][key];
+                            // 遍历
+                            formItem.valueLink.forEach(linkItem => {
+                                // 如果联动项的触发值不匹配，则跳过这一条
+                                if (v !== linkItem.value) {
+                                    return;
+                                }
+                                // 此时匹配，判断 linkList 有没有
+                                if (linkItem.linkList && linkItem.linkList.length && linkItem.linkList.length > 0) {
+                                    // 再遍历
+                                    linkItem.linkList.forEach(triggerItem => {
+                                        const linkKey = triggerItem.linkKey;
+                                        // 如果没有联动 key，则跳过（正常来说，不会没有）
+                                        if (!linkKey) {
+                                            return;
+                                        }
+                                        // 如果联动值，则更新值
+                                        if (triggerItem.enableLinkValue) {
+                                            this.updateFormData({[linkKey]: triggerItem.linkValue}, randomId);
+                                        }
+                                        // 如果联动禁用/取消禁用，则更新禁用
+                                        if (triggerItem.enableLinkDisable) {
+                                            const formKey = this.item.key;
+                                            const key = triggerItem.linkKey;
+                                            const keyText = `${formKey}_${randomId}_${key}`;
+                                            this.statusChangeFn.setElementDisable(keyText, triggerItem.linkDisable);
+                                        }
+                                        // 如果联动隐藏/显示，则更新
+                                        if (triggerItem.enableLinkHidden) {
+                                            const formKey = this.item.key;
+                                            const key = triggerItem.linkKey;
+                                            const keyText = `${formKey}_${randomId}_${key}`;
+                                            this.statusChangeFn.setElementHidden(keyText, triggerItem.linkHidden);
+                                        }
+                                        // 如果联动必填/非必填，则更新
+                                        if (triggerItem.enableLinkRequired) {
+                                            // this.setElementRequired(linkKey, randomId, triggerItem.linkRequired);
+                                            if (triggerItem.linkRequired) {
+                                                // 设置为必填
+                                                childField.forEach(anotherFormItem => {
+                                                    // 如果 linkKey 不匹配，则跳过
+                                                    if (anotherFormItem.key !== linkKey) {
+                                                        return;
+                                                    }
+                                                    // 先判断有没有 rules 这个属性，没有则添加这个属性，并且添加必填项然后返回
+                                                    if (!anotherFormItem.rules) {
+                                                        this.$set(anotherFormItem, 'rules', [
+                                                            {
+                                                                'required': true,
+                                                                'message': '请输入',
+                                                                'trigger': [
+                                                                    'blur',
+                                                                    'change',
+                                                                ],
+                                                            },
+                                                        ]);
+                                                        return;
+                                                    }
+
+                                                    // 遍历 其 rules，
+                                                    const {rules} = anotherFormItem;
+                                                    // 是否有 required 这条规则
+                                                    let haveRequired = false;
+                                                    // 是否已修改
+                                                    let changed = false;
+                                                    rules.forEach(rule => {
+                                                        // 如果有 required 属性
+                                                        if ('required' in rule) {
+                                                            haveRequired = true;
+                                                            // 如果值为 true，则跳过
+                                                            if (rule.required) {
+                                                                return;
+                                                            } else {
+                                                                // 否则修改其为 true
+                                                                rule.required = true;
+                                                                changed = true;
+                                                            }
+                                                        }
+                                                    });
+                                                    // 如果已修改，那么说明没必要继续操作了，跳过
+                                                    if (changed) {
+                                                        return;
+                                                    }
+                                                    // 如果没修改，并且没有必填规则
+                                                    // （注意，如果有规则，那么必然已修改。所以只存在有规则已修改、未修改有规则、未修改无规则三种情况）
+                                                    if (!haveRequired) {
+                                                        // 添加规则
+                                                        rules.push({
+                                                            'required': true,
+                                                            'message': '请输入',
+                                                            'trigger': [
+                                                                'blur',
+                                                                'change',
+                                                            ],
+                                                        });
+                                                    }
+                                                });
+                                            } else {
+                                                // 设置为取消必填
+                                                childField.forEach(anotherFormItem => {
+                                                    // 如果 linkKey 不匹配，则跳过
+                                                    if (anotherFormItem.key !== linkKey) {
+                                                        return;
+                                                    }
+
+                                                    // 先判断有没有 rules 这个属性，没有则添加这个属性，并且添加必填项然后返回
+                                                    if (!anotherFormItem.rules) {
+                                                        return;
+                                                    }
+                                                    // 如果有，则遍历并删除
+                                                    let i = -1;
+                                                    anotherFormItem.rules.forEach((rule, index) => {
+                                                        if ('required' in rule) {
+                                                            i = index;
+                                                        }
+                                                    });
+                                                    if (i !== -1) {
+                                                        anotherFormItem.rules.splice(i, 1);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                    this.childFormFileds.push(childField);
                 });
             },
 
@@ -779,6 +911,11 @@
                     allDisabled: this.allDisabled,
                 };
             },
+
+            // 根据值，初始化关联、隐藏、禁用等功能（通常是在 wti-form 的 data 变更时，会触发本函数）
+            initStatus () {
+
+            }
         },
         components: {
             FormInput,
