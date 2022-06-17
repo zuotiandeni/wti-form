@@ -6,6 +6,7 @@
         <el-select style="width:100%"
                    v-model="val"
                    :disabled="getDisabled"
+                   v-bind="bindOptions"
                    :placeholder="getPlaceholder(item)"
                    v-if="!getTextModel">
             <el-option v-for="option in dynamicDict[item.parentKey]"
