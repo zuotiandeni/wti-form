@@ -10,6 +10,7 @@
                            v-model="val[i-1]"
                            :disabled="getDisabled"
                            :placeholder="getSelectPlaceholder(item)"
+                           v-bind="bindOptions"
                            @change="v => onChange(v, i)">
                     <el-option v-for="items in getOptions(i)"
                                :key="items[dynamicSelectOption.value]"

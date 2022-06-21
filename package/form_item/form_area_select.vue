@@ -9,6 +9,7 @@
                 <el-select v-model="val[0]"
                            class="select"
                            placeholder="请选择"
+                           v-bind="bindOptions"
                            @change="v => onChange(v, '0')"
                            :disabled="getDisabled">
                     <el-option v-for="items in dynamicDict[item.firstParentKey || '10020']"

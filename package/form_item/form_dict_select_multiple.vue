@@ -7,6 +7,7 @@
                    v-model="val"
                    multiple
                    collapse-tags
+                   v-bind="bindOptions"
                    :disabled="getDisabled"
                    :placeholder="getPlaceholder(item)"
                    v-if="!getTextModel">
