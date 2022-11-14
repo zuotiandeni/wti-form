@@ -57,7 +57,8 @@
                 }
             },
             textModelValue () {
-                return this.val && this.val.join('至');
+                const linkSymbol = this.item.linkSymbol || '至';
+                return this.val && this.val.join(linkSymbol);
             }
         }
     };

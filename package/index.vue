@@ -184,6 +184,9 @@
                                             <FormCheckbox v-if="rowItem.type==='checkbox'"
                                                           v-bind="getProps(rowItem)"
                                                           v-model.trim="formData[rowItem.key]"/>
+                                            <FormIDCardDate v-if="rowItem.type==='id-card-date'"
+                                                            v-bind="getProps(rowItem)"
+                                                            v-model.trim="formData[rowItem.key]"/>
                                         </el-form-item>
                                     </el-col>
                                 </div>
@@ -219,6 +222,7 @@
     import FormMulSelectNormal from './form_item/form_mul_select_normal';
     import FormDynamicSelectMultiple from './form_item/form_dict_select_multiple';
     import FormCheckbox from './form_item/form_checkbox';
+    import FormIDCardDate from './form_item/form_idcard_date';
 
     import TableReadonly from './form_item/table_readonly';
 
@@ -1103,6 +1107,7 @@
             FormCheckbox,
             FormDictCheckbox,
             FormDynamicSelectMultiple,
+            FormIDCardDate,
 
             TableReadonly,
             ChildForm,
