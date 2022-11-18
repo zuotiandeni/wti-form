@@ -27,9 +27,9 @@
                 :clearable="true"/>
         </div>
         <template v-else>
-            <span v-if="!val">-</span>
-            <span v-else-if="val===longTypeValue">长期</span>
-            <span v-else>{{ val }}</span>
+            <span v-if="!val" :style="item.textStyle||{}" class="form-input-text">-</span>
+            <span v-else-if="val===longTypeValue" :style="item.textStyle||{}" class="form-input-text">长期</span>
+            <span v-else :style="item.textStyle||{}" class="form-input-text">{{ val }}</span>
         </template>
     </div>
 </template>
@@ -155,5 +155,14 @@
             padding-right: 10px;
             padding-left: 32px;
         }
+    }
+
+    .form-input-text {
+        position: relative;
+        width: 100%;
+        height: 36px;
+        line-height: 36px;
+        font-size: 14px;
+        color: #12182A;
     }
 </style>
