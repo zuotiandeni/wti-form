@@ -96,7 +96,7 @@
                                                        :ref="rowItem.key"
                                                        :item="rowItem"
                                                        v-model="formData[rowItem.key]"/>
-                                        <div v-else-if="rowItem.type==='slot-single'">
+                                        <div v-else-if="rowItem.type === 'slot-single'">
                                             <slot :name="rowItem.name"></slot>
                                         </div>
                                         <el-form-item v-else-if="rowItem.type==='slot'"
@@ -429,7 +429,7 @@
                         fields.children.forEach(field => {
                             // 处理初始值的问题
                             // 1. 如果是插槽，那么直接忽略这个
-                            if (field.type === 'slot') {
+                            if (field.type === 'slot' || field.type === 'slot-single') {
                                 return;
                             }
 
