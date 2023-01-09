@@ -136,6 +136,10 @@
                                                           v-bind="getProps(rowItem,index)"
                                                           :random-id="childField.randomId"
                                                           v-model.trim="val[index][rowItem.key]"/>
+                                            <FormIDCardDate v-if="rowItem.type==='id-card-date'"
+                                                            v-bind="getProps(rowItem,index)"
+                                                            :random-id="childField.randomId"
+                                                            v-model.trim="val[index][rowItem.key]"/>
                                         </el-form-item>
                                     </el-col>
                                 </div>
@@ -174,6 +178,7 @@
     import FormCheckbox from './form_item/form_checkbox';
     import FormDictCheckbox from './form_item/form_dict_checkbox';
     import FormDynamicSelectMultiple from './form_item/form_dict_select_multiple';
+    import FormIDCardDate from './form_item/form_idcard_date';
 
     export default {
         name: 'ChildForm',
@@ -284,10 +289,13 @@
         },
         methods: {
             // 监听值更新
-            valueUpdateEvent () {
+            valueUpdateEvent (data, childFormIndex) {
                 // const data = this.getData();
                 // console.log('data', data);
                 // this.$emit('input', data);
+                this.$emit('updateValue', {
+                    [this.item.key]: this.val
+                }, data, childFormIndex);
             },
 
             // todo 这里的数据字典请求接口，应该最后合并到一起，由一个专门的数据字典请求管理器去请求，减低接口重复请求的情况
@@ -434,6 +442,8 @@
                 if (!notAddValue) {
                     this.val.push(obj);
                 }
+
+                this.valueUpdateEvent();
 
                 const formKey = this.item.key;
 
@@ -936,6 +946,7 @@
             FormCheckbox,
             FormDictCheckbox,
             FormDynamicSelectMultiple,
+            FormIDCardDate,
         },
     };
 </script>

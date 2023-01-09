@@ -88,6 +88,7 @@
                                                    :ref="rowItem.key"
                                                    :all-disabled="allDisabled"
                                                    :item="rowItem"
+                                                   v-on="$listeners"
                                                    :base-u-r-l="baseURL"
                                                    :label-position="labelPosition ? labelPosition : 'top'"
                                                    v-model.trim="formData[rowItem.key]"/>

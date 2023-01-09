@@ -95,9 +95,16 @@
                 set (v) {
                     if (v === '') {
                         this.$emit('input', v);
-                        this.statusChangeFn.valueUpdateEvent({
-                            [this.item.key]: v,
-                        });
+                        if (this.formItemType !== 'childForm') {
+                            this.statusChangeFn.valueUpdateEvent({
+                                [this.item.key]: v
+                            });
+                        } else {
+                            // 如果是子表单的话，执行内置的变更
+                            this.childChangeData.valueUpdateEvent({
+                                [this.item.key]: v,
+                            }, this.childFormIndex);
+                        }
                         return;
                     }
                     // 设置时，如果是万元，需要乘以 10000 再处理。如果不是，那么直接处理
@@ -121,7 +128,9 @@
                         });
                     } else {
                         // 如果是子表单的话，执行内置的变更
-                        this.childChangeData.valueUpdateEvent();
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: n,
+                        }, this.childFormIndex);
                     }
                 }
             }
@@ -231,10 +240,17 @@
                 this.readonly = true;
                 if (this.tempVal === '') {
                     this.$emit('input', this.tempVal);
-
-                    this.statusChangeFn.valueUpdateEvent({
-                        [this.item.key]: this.tempVal,
-                    });
+                    
+                    if (this.formItemType !== 'childForm') {
+                        this.statusChangeFn.valueUpdateEvent({
+                            [this.item.key]: this.tempVal,
+                        });
+                    } else {
+                        // 如果是子表单的话，执行内置的变更
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: this.tempVal,
+                        }, this.childFormIndex);
+                    }
                     return;
                 }
 

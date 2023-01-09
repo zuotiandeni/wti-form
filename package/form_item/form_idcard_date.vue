@@ -92,11 +92,23 @@
                     }
                 },
                 set (newValue) {
-                    // console.log('set', newValue);
+                    let v = null;
                     if (newValue === null) {
-                        this.$emit('input', '');
+                        v = '';
                     } else {
-                        this.$emit('input', newValue);
+                        v = newValue;
+                    }
+                    this.$emit('input', v);
+                    // 只有非子表单的情况下，才会冒泡上去数据变更
+                    if (this.formItemType !== 'childForm') {
+                        this.statusChangeFn.valueUpdateEvent({
+                            [this.item.key]: v
+                        });
+                    } else {
+                        // 如果是子表单的话，执行内置的变更
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: v,
+                        }, this.childFormIndex);
                     }
                 }
             },
@@ -108,7 +120,6 @@
             value: {
                 // immediate: true,
                 handler: function (newValue) {
-                    console.log('watch value', newValue);
                     // 如果非空值，则赋值
                     if (newValue) {
                         // 如果该身份证有效期是长期，那么设置数据类型为长期
@@ -129,8 +140,20 @@
             // 当身份证类型变化时
             changeDateType () {
                 if (this.dateType === 'long') {
+                    const v = this.longTypeValue;
                     // 如果是长期，则设置该值为长期的值
-                    this.$emit('input', this.longTypeValue);
+                    this.$emit('input', v);
+                    // 只有非子表单的情况下，才会冒泡上去数据变更
+                    if (this.formItemType !== 'childForm') {
+                        this.statusChangeFn.valueUpdateEvent({
+                            [this.item.key]: v
+                        });
+                    } else {
+                        // 如果是子表单的话，执行内置的变更
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: v,
+                        }, this.childFormIndex);
+                    }
                 } else {
                     // 非长期则置为空
                     this.$emit('input', '');

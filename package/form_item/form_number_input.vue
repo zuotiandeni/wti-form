@@ -115,7 +115,9 @@
                             });
                         } else {
                             // 如果是子表单的话，执行内置的变更
-                            this.childChangeData.valueUpdateEvent();
+                            this.childChangeData.valueUpdateEvent({
+                                [this.item.key]: n,
+                            }, this.childFormIndex);
                         }
                         return;
                     }
@@ -157,7 +159,9 @@
                         });
                     } else {
                         // 如果是子表单的话，执行内置的变更
-                        this.childChangeData.valueUpdateEvent();
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: n,
+                        }, this.childFormIndex);
                     }
                 }
             }
@@ -191,10 +195,18 @@
                 this.readonly = true;
                 if (this.tempVal === '') {
                     this.$emit('input', this.tempVal);
-
-                    this.statusChangeFn.valueUpdateEvent({
-                        [this.item.key]: this.tempVal,
-                    });
+                    
+                    // 只有非子表单的情况下，才会冒泡上去数据变更
+                    if (this.formItemType !== 'childForm') {
+                        this.statusChangeFn.valueUpdateEvent({
+                            [this.item.key]: this.tempVal,
+                        });
+                    } else {
+                        // 如果是子表单的话，执行内置的变更
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: this.tempVal,
+                        }, this.childFormIndex);
+                    }
                     return;
                 }
 

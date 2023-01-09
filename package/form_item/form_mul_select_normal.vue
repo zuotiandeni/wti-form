@@ -5,7 +5,7 @@
         <el-select style="width:100%"
                    v-model="val"
                    multiple
-                   collapse-tags
+                   :collapse-tags="item.hasOwnProperty('showTags') ? item.showTags : true"
                    :disabled="getDisabled"
                    :placeholder="getSelectPlaceholder(item)"
                    v-bind="bindOptions"
@@ -54,7 +54,9 @@
                         });
                     } else {
                         // 如果是子表单的话，执行内置的变更
-                        this.childChangeData.valueUpdateEvent();
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: v,
+                        }, this.childFormIndex);
                     }
                 }
             },

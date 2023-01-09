@@ -47,7 +47,9 @@
                         });
                     } else {
                         // 如果是子表单的话，执行内置的变更
-                        this.childChangeData.valueUpdateEvent();
+                        this.childChangeData.valueUpdateEvent({
+                            [this.item.key]: v,
+                        }, this.childFormIndex);
                     }
                 }
             },
