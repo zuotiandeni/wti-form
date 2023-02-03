@@ -7,6 +7,7 @@
                    v-model="val"
                    :disabled="getDisabled"
                    v-bind="bindOptions"
+                   :clearable="getClearableStatus(false)"
                    :placeholder="getPlaceholder(item)"
                    v-if="!getTextModel">
             <el-option v-for="option in dynamicDict[item.parentKey]"

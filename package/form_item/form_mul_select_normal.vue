@@ -9,13 +9,17 @@
                    :disabled="getDisabled"
                    :placeholder="getSelectPlaceholder(item)"
                    v-bind="bindOptions"
+                   :clearable="getClearableStatus(false)"
                    v-if="!getTextModel">
             <el-option v-for="option in item.options"
                        :key="option.value"
                        :label="option.label"
                        :value="option.value"/>
         </el-select>
-        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">{{ textModelValue || '-' }}</div>
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}"
+             class="form-input-text">
+            {{ textModelValue || '-' }}
+        </div>
     </div>
 </template>
 
@@ -28,17 +32,16 @@
         mixins: [ FormMixin ],
         computed: {
             textModelValue () {
+                const content = [];
                 if (this.item.options) {
-                    let val = '';
-                    this.item.options.forEach(item => {
-                        if (item.value === this.value) {
-                            val = item.label;
+                    this.item.options.forEach((item) => {
+                        if (this.val.indexOf(item.value) >= 0) {
+                            content.push(item.label);
                         }
                     });
-                    return val;
-                } else {
-                    return '';
                 }
+                const linkSymbol = this.item.linkSymbol || '、';
+                return content.join(linkSymbol) || '-';
             },
             val: {
                 get () {

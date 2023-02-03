@@ -13,6 +13,7 @@
                         @focus="e => onFocus(item, e)"
                         :format="item.format || 'HH:mm'"
                         :value-format="item['value-format'] || 'HH:mm:00'"
+                        :clearable="getClearableStatus(true)"
                         v-bind="bindOptions"
                         v-if="!getTextModel"/>
         <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">{{ val || '-' }}</div>

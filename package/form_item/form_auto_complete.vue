@@ -9,7 +9,7 @@
                          class="auto-complte-input"
                          @blur="e => onBlur(item, e)"
                          @focus="e => onFocus(item, e)"
-                         :clearable="true"
+                         :clearable="getClearableStatus(true)"
                          value-key="value"
                          :fetch-suggestions="querySearchAsync"
                          @select="handleSelect"

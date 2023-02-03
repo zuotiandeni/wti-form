@@ -10,7 +10,7 @@
                         @blur="e => onBlur(item, e)"
                         @focus="e => onFocus(item, e)"
                         value-format="yyyy-MM-dd"
-                        :clearable="true"
+                        :clearable="getClearableStatus(true)"
                         v-bind="bindOptions"
                         v-if="!getTextModel"/>
         <div v-else

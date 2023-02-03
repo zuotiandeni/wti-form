@@ -52,7 +52,7 @@
             <!-- 区块级，每个 filed 是一个区块 -->
             <div v-for="field in currentFileds"
                  :key="field.label">
-                <div v-if="scanType === 'normal' || (scanType === 'single' && singleScanBlock === field.label)"
+                <div v-show="scanType === 'normal' || (scanType === 'single' && singleScanBlock === field.label)"
                      :class="getBlockClass(field)"
                      :style="field.style">
                     <!-- 区块名 -->
@@ -86,6 +86,7 @@
                                         <ChildForm v-if="rowItem.type === 'child-form'"
                                                    :text-model="textModel"
                                                    :ref="rowItem.key"
+                                                   :global-config="globalConfig"
                                                    :all-disabled="allDisabled"
                                                    :item="rowItem"
                                                    v-on="$listeners"
@@ -121,7 +122,9 @@
                                                       :prop="rowItem.key">
                                             <template slot="label">
                                                 <div v-if="getFormItemLabel(rowItem)" class="wti-form-label">
-                                                    <span>{{ getFormItemLabel(rowItem) }}</span>
+                                                    <!-- eslint-disable-next-line -->
+                                                    <span v-if="rowItem.htmlLabel" slot="label" v-html="rowItem.htmlLabel"></span>
+                                                    <span v-else>{{ getFormItemLabel(rowItem) }}</span>
                                                     <span class="wti-form-label-Colon"
                                                           v-if="getFormItemLabelColon(rowItem)">:</span>
                                                 </div>
@@ -286,6 +289,11 @@
                 default: () => {
                 },
             },
+            // 全局的表单项配置
+            globalConfig: {
+                type: Object,
+                default: () => ({}),
+            }
         },
         data () {
             return {
@@ -1085,6 +1093,7 @@
                     ref: rowItem.key,
                     item: rowItem,
                     allDisabled: this.allDisabled,
+                    globalConfig: this.globalConfig
                 };
             },
         },

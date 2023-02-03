@@ -13,7 +13,7 @@
                       @blur="e => onBlur(item, e)"
                       @focus="e => onFocus(item, e)"
                       v-bind="bindOptions"
-                      :clearable="true">
+                      :clearable="getClearableStatus(true)">
                 <template slot="prepend" v-if="prepend">{{ prepend }}</template>
                 <template slot="append" v-if="append">{{ append }}</template>
             </el-input>
@@ -23,7 +23,7 @@
                       class="input-readonly"
                       type="input"
                       v-bind="bindOptions"
-                      :clearable="true">
+                      :clearable="getClearableStatus(true)">
                 <template slot="prepend" v-if="prepend">{{ prepend }}</template>
                 <template slot="append" v-if="append">{{ append }}</template>
             </el-input>

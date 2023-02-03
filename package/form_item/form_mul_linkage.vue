@@ -11,6 +11,7 @@
                            :disabled="getDisabled"
                            :placeholder="getSelectPlaceholder(item)"
                            v-bind="bindOptions"
+                           :clearable="getClearableStatus(false)"
                            @change="v => onChange(v, i)">
                     <el-option v-for="items in getOptions(i)"
                                :key="items[dynamicSelectOption.value]"
@@ -260,7 +261,9 @@
                     // 有值，且长度不为0，则显然不需要再去请求数据字典了
                     return;
                 } else {
-                    this.loadDict(v);
+                    if (v !== '') {
+                        this.loadDict(v);
+                    }
                 }
             },
         }

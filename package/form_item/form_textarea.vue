@@ -13,6 +13,7 @@
                   :rows="item.autosize ? '' : 4"
                   :resize="item.resize || 'none'"
                   v-bind="item"
+                  :clearable="getClearableStatus(true)"
                   v-if="!getTextModel"/>
         <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle || {}" class="form-input-text">
             {{ val || '-' }}

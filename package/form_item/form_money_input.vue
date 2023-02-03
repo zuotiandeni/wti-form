@@ -13,7 +13,7 @@
                       @blur="e => onBlur(item, e)"
                       @focus="e => onFocus(item, e)"
                       v-bind="bindOptions"
-                      :clearable="true">
+                      :clearable="getClearableStatus(true)">
                 <template slot="append">{{ append }}</template>
             </el-input>
             <el-input v-model.trim="dealInputValue"
@@ -22,7 +22,7 @@
                       class="input-readonly"
                       type="input"
                       v-bind="bindOptions"
-                      :clearable="true">
+                      :clearable="getClearableStatus(true)">
                 <template slot="append">{{ append }}</template>
             </el-input>
         </template>

@@ -7,6 +7,11 @@
  */
 export default {
     props: {
+        // 全局的表单项配置
+        globalConfig: {
+            type: Object,
+            default: () => ({}),
+        },
         // 第几个子表单（下标）
         childFormIndex: {
             type: Number,
@@ -116,6 +121,16 @@ export default {
         }
     },
     methods: {
+        // 获取下拉框Clearable属性的值
+        getClearableStatus (defaultValue) {
+            if (this.bindOptions.clearable !== undefined) {
+                return this.bindOptions.clearable;
+            } else if (this.globalConfig.clearable !== undefined) {
+                return this.globalConfig.clearable;
+            } else {
+                return defaultValue;
+            }
+        },
         // 整合添加类名--用于扩展多类名
         exposeSpecificClass (parentKey, childFormIndex, key) {
             return {

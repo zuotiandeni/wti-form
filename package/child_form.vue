@@ -56,8 +56,10 @@
                                                       :rules="rowItem.rules"
                                                       :prop="rowItem.key">
                                             <template slot="label">
-                                                <div class="wti-form-label">
-                                                    <span>{{ getFormItemLabel(rowItem) }}</span>
+                                                <div v-if="getFormItemLabel(rowItem)" class="wti-form-label">
+                                                    <!-- eslint-disable-next-line -->
+                                                    <span v-if="rowItem.htmlLabel" slot="label" v-html="rowItem.htmlLabel"></span>
+                                                    <span v-else>{{ getFormItemLabel(rowItem) }}</span>
                                                     <span class="wti-form-label-Colon"
                                                           v-if="getFormItemLabelColon(item)">:</span>
                                                 </div>
@@ -192,6 +194,11 @@
                 type: Array,
                 default: () => ([]),
             },
+            // 全局的表单项配置
+            globalConfig: {
+                type: Object,
+                default: () => ({}),
+            }
         },
         computed: {
             val: {
@@ -919,6 +926,7 @@
                     parentKey: this.item.key,
                     item: rowItem,
                     allDisabled: this.allDisabled,
+                    globalConfig: this.globalConfig
                 };
             },
 

@@ -7,6 +7,7 @@
                    :disabled="getDisabled"
                    :placeholder="getSelectPlaceholder(item)"
                    v-bind="bindOptions"
+                   :clearable="getClearableStatus(false)"
                    v-if="!getTextModel">
             <el-option v-for="option in item.options"
                        :key="option.value"

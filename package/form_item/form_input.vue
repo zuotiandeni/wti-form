@@ -9,7 +9,7 @@
                   @blur="e => onBlur(item, e)"
                   @focus="e => onFocus(item, e)"
                   type="text"
-                  :clearable="true"
+                  :clearable="getClearableStatus(true)"
                   v-bind="bindOptions"
                   v-if="!getTextModel">
             <template slot="prepend" v-if="prepend">{{ prepend }}</template>

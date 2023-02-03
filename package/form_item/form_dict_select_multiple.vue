@@ -9,6 +9,7 @@
                    :collapse-tags="item.hasOwnProperty('showTags') ? item.showTags : true"
                    v-bind="bindOptions"
                    :disabled="getDisabled"
+                   :clearable="getClearableStatus(false)"
                    :placeholder="getPlaceholder(item)"
                    v-if="!getTextModel">
             <el-option v-for="option in dynamicDict[item.parentKey]"

@@ -13,7 +13,7 @@
                         @focus="e => onFocus(item, e)"
                         :picker-options="item.pickerOptions ? handlerDate(item.pickerOptions) : () => false"
                         value-format="yyyy-MM-dd"
-                        :clearable="true"
+                        :clearable="getClearableStatus(true)"
                         v-bind="bindOptions"
                         v-if="!getTextModel"/>
         <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle||{}" class="form-input-text">{{ val || '-' }}</div>

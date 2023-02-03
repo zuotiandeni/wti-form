@@ -8,8 +8,10 @@
                      @change="handleCheckAllChange">
             全选
         </el-checkbox>
-        <el-checkbox-group v-model="val" :disabled="getDisabled"
-                           v-bind="bindOptions" v-if="!getTextModel">
+        <el-checkbox-group v-model="val"
+                           :disabled="getDisabled"
+                           v-bind="bindOptions"
+                           v-if="!getTextModel">
             <el-checkbox v-for="option in dynamicDict[item.parentKey]"
                          :key="option[dynamicSelectOption.value]"
                          :disabled="option[dynamicSelectOption.disabled]"
@@ -17,7 +19,10 @@
                 {{ option[dynamicSelectOption.label] }}
             </el-checkbox>
         </el-checkbox-group>
-        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle || {}" class="form-input-text">{{ textModelValue || '-' }}</div>
+        <div v-else :class="exposeSpecificClass(parentKey,childFormIndex,item.key)" :style="item.textStyle || {}"
+             class="form-input-text">
+            {{ textModelValue || '-' }}
+        </div>
     </div>
 </template>
 

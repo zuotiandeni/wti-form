@@ -24,7 +24,7 @@
                 align="right"
                 :picker-options="pickerOptions"
                 :editable="true"
-                :clearable="true"/>
+                :clearable="getClearableStatus(true)"/>
         </div>
         <template v-else>
             <span v-if="!val" :style="item.textStyle||{}" class="form-input-text">-</span>
