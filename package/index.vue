@@ -144,6 +144,9 @@
                                             <FormDictSelect v-if="rowItem.type === 'dynamic-select'"
                                                             v-bind="getProps(rowItem)"
                                                             v-model.trim="formData[rowItem.key]"/>
+                                            <FormDynamicSelectAdvance v-if="rowItem.type === 'dynamic-select-advance'"
+                                                                      v-bind="getProps(rowItem)"
+                                                                      v-model.trim="formData[rowItem.key]"/>
                                             <FormDynamicSelectMultiple
                                                 v-if="rowItem.type === 'dynamic-select-normal' || rowItem.type === 'dynamic-select-multiple'"
                                                 v-bind="getProps(rowItem)"
@@ -227,6 +230,7 @@
     import FormDynamicSelectMultiple from './form_item/form_dict_select_multiple';
     import FormCheckbox from './form_item/form_checkbox';
     import FormIDCardDate from './form_item/form_idcard_date';
+    import FormDynamicSelectAdvance from './form_item/form_dict_select_advance.vue';
 
     import TableReadonly from './form_item/table_readonly';
 
@@ -817,6 +821,21 @@
                                         this.$set(this.dynamicDict, field.parentKey, []);
                                     }
                                 }
+                            } else if (field.type === 'dynamic-select-advance') {
+                                if (field.dynamicSelectOption && field.dynamicSelectOption.dictUrl) {
+                                    // 不做处理
+                                } else if (field.querySearchAsync) {
+                                    // 也不做处理
+                                } else {
+                                    // 此时，说明走老的字典逻辑
+                                    if (parentCodeList.indexOf(field.parentKey) === -1) {
+                                        if (!(this.dynamicDict[field.parentKey] && this.dynamicDict[field.parentKey].length !== 0)) {
+                                            parentCodeList.push(field.parentKey);
+                                            // 初始化一个数组
+                                            this.$set(this.dynamicDict, field.parentKey, []);
+                                        }
+                                    }
+                                }
                             }
                             // 地区选择框，三级联动
                             if (field.type === 'area-select') {
@@ -1118,6 +1137,7 @@
             FormDictCheckbox,
             FormDynamicSelectMultiple,
             FormIDCardDate,
+            FormDynamicSelectAdvance,
 
             TableReadonly,
             ChildForm,

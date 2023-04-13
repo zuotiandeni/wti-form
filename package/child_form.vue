@@ -84,6 +84,10 @@
                                                             v-bind="getProps(rowItem,index)"
                                                             :random-id="childField.randomId"
                                                             v-model.trim="val[index][rowItem.key]"/>
+                                            <FormDynamicSelectAdvance v-if="rowItem.type === 'dynamic-select-advance'"
+                                                                      v-bind="getProps(rowItem,index)"
+                                                                      :random-id="childField.randomId"
+                                                                      v-model.trim="val[index][rowItem.key]"/>
                                             <FormDictCheckbox v-if="rowItem.type === 'dynamic-checkbox'"
                                                               v-bind="getProps(rowItem,index)"
                                                               :random-id="childField.randomId"
@@ -163,6 +167,7 @@
 <script>
     import FormMixin from './mixin';
     import FormInput from './form_item/form_input';
+    import FormDynamicSelectAdvance from './form_item/form_dict_select_advance.vue';
     import FormDictSelect from './form_item/form_dict_select';
     import FormDate from './form_item/form_date';
     import FormHourMinute from './form_item/form_hour_minute';
@@ -325,6 +330,21 @@
                                         parentCodeList.push(field.parentKey);
                                         // 初始化一个数组
                                         this.$set(this.dynamicDict, field.parentKey, []);
+                                    }
+                                }
+                            } else if (field.type === 'dynamic-select-advance') {
+                                if (field.dynamicSelectOption && field.dynamicSelectOption.dictUrl) {
+                                    // 不做处理
+                                } else if (field.querySearchAsync) {
+                                    // 也不做处理
+                                } else {
+                                    // 此时，说明走老的字典逻辑
+                                    if (parentCodeList.indexOf(field.parentKey) === -1) {
+                                        if (!(this.dynamicDict[field.parentKey] && this.dynamicDict[field.parentKey].length !== 0)) {
+                                            parentCodeList.push(field.parentKey);
+                                            // 初始化一个数组
+                                            this.$set(this.dynamicDict, field.parentKey, []);
+                                        }
                                     }
                                 }
                             }
@@ -955,6 +975,7 @@
             FormDictCheckbox,
             FormDynamicSelectMultiple,
             FormIDCardDate,
+            FormDynamicSelectAdvance,
         },
     };
 </script>
